@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class FitrohIzatulMalkiyah extends StatefulWidget {
   const FitrohIzatulMalkiyah({Key? key}) : super(key: key);
 
