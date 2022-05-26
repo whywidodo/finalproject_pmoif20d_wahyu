@@ -35,8 +35,9 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             //logo
             Image.asset(
-              "Gambar/Ceria.png",
-              width: 150,
+              "assets/images/ceria256color.png",
+              width: 100,
+              height: 100,
             ),
             //text ceria
             Text("CERITA INDONESIA",
