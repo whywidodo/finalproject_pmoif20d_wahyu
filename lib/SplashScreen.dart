@@ -33,11 +33,12 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            //logo
             Image.asset(
               "Gambar/Ceria.png",
               width: 150,
             ),
-
+            //text ceria
             Text("CERITA INDONESIA",
             style: TextStyle(
               color: Color (0xFF6A2B84)

@@ -1,5 +1,4 @@
 import 'dart:html';
-
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,7 +9,7 @@ class HomePage extends StatelessWidget {
         title: Text ('Home Page'),
       ),
       body: Center(
-        child: Text ("Ini Halaman Home"),
+        child: Text ("Ini Adalah Halaman Home"),
       ),
     );
   }
