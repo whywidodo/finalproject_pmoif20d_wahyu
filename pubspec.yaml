@@ -79,6 +79,10 @@ flutter:
        fonts:
          - asset: assets/Fonts/Poppins-Black.ttf
          - asset: assets/Fonts/Poppins-BlackItalic.ttf
+     - family: PoppinsMedium
+       fonts:
+         - asset: assets/Fonts/Poppins-Medium.ttf
+         - asset: assets/Fonts/Poppins-MediumItalic.ttf
      - family: PoppinsLight
        fonts:
          - asset: assets/Fonts/Poppins-Light.ttf

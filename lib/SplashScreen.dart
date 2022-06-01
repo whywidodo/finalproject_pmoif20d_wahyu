@@ -40,10 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 100,
             ),
             //text ceria
-            Text("CERITA INDONESIA",
-            style: TextStyle(
-              color: Color (0xFF6A2B84)
-            ),)
+            Text("CERITA INDONESIA",style: TextStyle(fontFamily: 'PoppinsBlack',color: Color (0xFF6A2B84)))
           ],
         )
       ),
