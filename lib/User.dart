@@ -14,7 +14,7 @@ class _UserState extends State<User> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.arrow_back_ios),
+          // leading: Icon(Icons.arrow_back_ios),
           backgroundColor: Color(0xFF6A2B84),
         ),
         body: ListView(children: [

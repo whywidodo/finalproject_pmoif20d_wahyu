@@ -1,90 +1,378 @@
+import 'package:finalproject_pmoif20d_wahyu/About.dart';
+import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
+import 'package:finalproject_pmoif20d_wahyu/User.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+int _selectedIndex = 0;
+
+class _HomePageState extends State<HomePage> {
   final List<Map> myProducts =
-  List.generate(20, (index) => {"id": index, "name": "Cerita $index"}).toList();
+      List.generate(20, (index) => {"id": index, "name": "Cerita $index"})
+          .toList();
+
+  final ButtonStyle style =
+      ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 14));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/images/ceria256white.png')
-          ),
-          centerTitle: true,
-          title: const Text ('Cerita Indonesia', style: TextStyle(fontFamily: 'PoppinsMedium'),),
-          backgroundColor: const Color(0xFF6A2B84),
-          foregroundColor: Colors.white,
-          actions: [
-            IconButton(
-                onPressed: () {
-                },
-                icon: const Icon(Icons.search))
-          ],
+        leading: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Image.asset('assets/images/ceria256white.png')),
+        centerTitle: true,
+        title: const Text(
+          'Cerita Indonesia',
+          style: TextStyle(fontFamily: 'PoppinsMedium'),
+        ),
+        backgroundColor: const Color(0xFF6A2B84),
+        foregroundColor: Colors.white,
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
         bottom: PreferredSize(
           child: Container(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: const [
-                Expanded(
-                  child: Text('Dongeng', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontFamily: 'PoppinsMedium'),)
-                ),
-                Expanded(
-                    child: Text('Novel', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontFamily: 'PoppinsMedium'),)
-                ),
-                Expanded(
-                    child: Text('Cerpen', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontFamily: 'PoppinsMedium'),)
-                ),
-                Expanded(
-                    child: Text('Biografi', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontFamily: 'PoppinsMedium'),)
-                )
-              ],
-            )
-          ),
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: const [
+                  Expanded(
+                      child: Text(
+                    'Dongeng',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'PoppinsMedium'),
+                  )),
+                  Expanded(
+                      child: Text(
+                    'Novel',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'PoppinsMedium'),
+                  )),
+                  Expanded(
+                      child: Text(
+                    'Cerpen',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'PoppinsMedium'),
+                  )),
+                  Expanded(
+                      child: Text(
+                    'Biografi',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'PoppinsMedium'),
+                  ))
+                ],
+              )),
           preferredSize: const Size.fromHeight(25),
         ),
         bottomOpacity: .7,
       ),
       body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        padding: const EdgeInsets.all(10.0),
+        child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
                 childAspectRatio: 3 / 2,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20),
-                itemCount: myProducts.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/ceria256color.png'),
-                        ),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 2, blurRadius: 1, offset: const Offset(0, 1)),
-                        ],
-                      ),
-
-                    child: Text(myProducts[index]["name"]),
-                  );
+            itemCount: myProducts.length,
+            itemBuilder: (BuildContext ctx, index) {
+              return Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/ceria256color.png'),
+                  ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1)),
+                  ],
+                ),
+                child: Text(myProducts[index]["name"]),
+              );
             }),
-          ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFF6A2B84),
         unselectedItemColor: Colors.grey,
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Beranda"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: "Beranda"),
-          BottomNavigationBarItem(icon: Icon(Icons.star_border), label: "Favorit"),
-          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "Tentang"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined), label: "Profil"),
+              icon: Icon(Icons.star_border), label: "Favorit"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.info_outline), label: "Tentang"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined), label: "Profil"),
         ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    // setState(() {
+    _selectedIndex = index;
+    if (index == 0) {
+      Fluttertoast.showToast(msg: "Ini Index 0");
+    } else if (index == 1) {
+      //Fluttertoast.showToast(msg: "Ini Index 1");
+      showDetailCeritaG();
+    } else if (index == 2) {
+      // Fluttertoast.showToast(msg: "Ini Index 2");
+      showAboutApp();
+    } else if (index == 3) {
+      // Fluttertoast.showToast(msg: "Ini Index 3");
+      showBottomSheetLogin();
+    }
+    // });
+  }
+
+  void showDetailCeritaG() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailCeritaGratis()));
+  }
+
+  void showAboutApp() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const About()));
+  }
+
+  void showUser() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const User()));
+  }
+
+  void showBottomSheetLogin() {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Wrap(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(
+                    top: 20, left: 20, right: 20, bottom: 10),
+                child: const Text("Login",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'PoppinsMedium',
+                        color: Color(0xFF6A2B84))),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                child: const TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    labelText: 'Username',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                child: const TextField(
+                  obscureText: true,
+                  obscuringCharacter: "*",
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    labelText: 'Password',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(25),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF6A2B84),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showUser();
+                        },
+                        child: const Text(
+                          "Masuk",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'PoppinsMedium',
+                            color: Color(0xffffffff),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xffffffff),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(color: Color(0xFF6A2B84))),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showBottomSheetRegistrasi();
+                        },
+                        child: const Text(
+                          "Registrasi",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'PoppinsMedium',
+                            color: Color(0xFF6A2B84),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void showBottomSheetRegistrasi() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Wrap(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(
+                    top: 20, left: 20, right: 20, bottom: 10),
+                child: const Text("Registrasi",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'PoppinsMedium',
+                        color: Color(0xFF6A2B84))),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                child: const TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    labelText: 'Email',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                child: const TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    labelText: 'Username',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                child: const TextField(
+                  obscureText: true,
+                  obscuringCharacter: "*",
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    labelText: 'Password',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                child: const TextField(
+                  obscureText: true,
+                  obscuringCharacter: "*",
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
+                    labelText: 'Ulangi Password',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 50, right: 50, top: 25, bottom: 25),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF6A2B84),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          "Registrasi",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'PoppinsMedium',
+                            color: Color(0xFFFFFFFF),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

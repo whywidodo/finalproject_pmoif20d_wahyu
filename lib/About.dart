@@ -13,13 +13,19 @@ class _AboutState extends State<About> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.arrow_back_ios),
+          // leading: const Icon(Icons.arrow_back_ios),
+          // actions: [
+          //   IconButton(
+          //     onPressed: (){},
+          //     icon: const Icon(Icons.arrow_back),
+          //   )
+          // ],
           centerTitle: true,
           title: const Text(
             'About',
             style: TextStyle(fontFamily: 'PoppinsMedium'),
           ),
-          backgroundColor: Color(0xFF6A2B84),
+          backgroundColor: const Color(0xFF6A2B84),
           foregroundColor: Colors.white,
         ),
         body: ListView(children: [
