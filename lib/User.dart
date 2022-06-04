@@ -2,9 +2,12 @@ import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-
 import 'TambahCerita.dart';
+
+List<String> bank = ["Pilih Bank Tujuan", "BRI", "BNI", "BCA", "Mandiri"];
+String bankDipilih = "Pilih Bank Tujuan";
 
 class User extends StatefulWidget {
   const User({Key? key}) : super(key: key);
@@ -18,14 +21,15 @@ class _UserState extends State<User> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
-            },
+          centerTitle: true,
+          title: const Text(
+            'User',
+            style: TextStyle(fontFamily: 'PoppinsMedium'),
           ),
           backgroundColor: Color(0xFF6A2B84),
+          actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.logout_rounded))
+          ],
         ),
         body: ListView(children: [
           Container(
@@ -83,7 +87,9 @@ class _UserState extends State<User> {
                           ElevatedButton.icon(
                               onPressed: () {
                                 Navigator.push(
-                                    context, MaterialPageRoute(builder: (context) => TambahCerita()));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TambahCerita()));
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(130, 30),
@@ -102,7 +108,9 @@ class _UserState extends State<User> {
                               ),
                               label: Text('Tambah Cerita')),
                           ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialogKomisi(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(115, 30),
                                   maximumSize: const Size(115, 30),
@@ -120,7 +128,9 @@ class _UserState extends State<User> {
                               ),
                               label: Text('Tarik Komisi')),
                           ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialogUbah(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(100, 30),
                                   maximumSize: const Size(100, 30),
@@ -156,7 +166,7 @@ class _UserState extends State<User> {
                             color: Color(0xFF9B5DB5),
                             borderRadius: BorderRadius.circular(8)),
                         margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.only(left:10),
+                        padding: EdgeInsets.only(left: 10),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -206,4 +216,258 @@ class _UserState extends State<User> {
                   ]))
         ]));
   }
+}
+
+void showDialogUbah(context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(left: 25.0, right: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      const Expanded(
+                        child: Text(
+                          "Edit Profil",
+                          style: TextStyle(
+                              fontSize: 18, fontFamily: 'PoppinsMedium'),
+                        ),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })
+                    ],
+                  )),
+              Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Wrap(children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          labelText: 'Nama Lengkap',
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(10),
+                        ),
+                      ),
+                    ),
+                    Container(
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
+                        child: const TextField(
+                            decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          labelText: 'Email',
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(10),
+                        ))),
+                    Container(
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
+                        child: const TextField(
+                            obscureText: true,
+                            obscuringCharacter: "*",
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              labelText: 'Password',
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(10),
+                            ))),
+                    Divider(indent: 20, endIndent: 20),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: const Text(
+                        '*Abaikan jika tidak mengganti password',
+                        style: TextStyle(
+                            fontFamily: 'PoppinsItalic',
+                            fontSize: 8,
+                            color: Color(0xFF6A2B84)),
+                      ),
+                    ),
+                    Container(
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
+                        child: const TextField(
+                            obscureText: true,
+                            obscuringCharacter: "*",
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              labelText: 'Password Baru',
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(10),
+                            ))),
+                    Container(
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
+                        child: const TextField(
+                            obscureText: true,
+                            obscuringCharacter: "*",
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              labelText: 'Ulangi Password Baru',
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(10),
+                            ))),
+                    Container(
+                        margin: EdgeInsets.all(25),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFF6A2B84),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Simpan",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'PoppinsMedium',
+                                        color: Color(0xffffffff),
+                                      ))),
+                            )
+                          ],
+                        ))
+                  ]))
+            ]);
+      });
+}
+
+void showDialogKomisi(context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(left: 25.0, right: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      const Expanded(
+                        child: Text(
+                          "Tarik Komisi",
+                          style: TextStyle(
+                              fontSize: 18, fontFamily: 'PoppinsMedium'),
+                        ),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })
+                    ],
+                  )),
+              Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Wrap(children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          labelText: 'Jumlah Penarikan',
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(10),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                      child: DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                          ),
+                          isExpanded: true,
+                          hint: const Text("Silakan pilih agama anda"),
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          value: bankDipilih,
+                          items: bank.map((String value) {
+                            return DropdownMenuItem(
+                                value: value, child: Text(value));
+                          }).toList(),
+                          onChanged: (String? value) {
+                            {
+                              bankDipilih = value!;
+                            }
+                            ;
+                          }),
+                    )
+                  ])),
+              Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: const TextField(
+                      decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    labelText: 'Nama Pemilik Rekening',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(10),
+                  ))),
+              Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: const TextField(
+                      decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    labelText: 'Nomor Rekening',
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(10),
+                  ))),
+              Container(
+                  margin: EdgeInsets.all(25),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: const Color(0xFF6A2B84),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Proses",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: 'PoppinsMedium',
+                                  color: Color(0xffffffff),
+                                ))),
+                      )
+                    ],
+                  ))
+            ]);
+      });
 }
