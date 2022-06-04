@@ -12,12 +12,6 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.chevron_left),
-            onPressed: () {
-              print('clicked once');
-            },
-          ),
           centerTitle: true,
           title: const Text(
             'Detail Cerita',
@@ -39,7 +33,7 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
               children: [
                 Text(
                   'Ayat-Ayat Cinta',
-                  style: TextStyle(fontSize: 20, fontFamily: 'PoppinsBold'),
+                  style: TextStyle(fontSize: 18, fontFamily: 'PoppinsBlack'),
                 ),
                 Text('Autor Satu, Mei 2021',
                     style: TextStyle(
@@ -60,9 +54,9 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                               AssetImage('assets/images/ceria256white.png'))),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.only(top: 10, right: 20),
+                  margin: EdgeInsets.only(top: 10, right: 50),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton.icon(
                           onPressed: () {},
@@ -98,6 +92,76 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                             size: 15,
                           ),
                           label: Text('Baca Cerita')),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Cerita Lainnya',
+                        style:
+                            TextStyle(fontSize: 12, fontFamily: 'PoppinsBlack'),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  height: 200,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                            onTap: () {},
+                            child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.purple,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage(
+                                        'assets/images/ceria256white.png')),
+                              ),
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                            onTap: () {},
+                            child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.purple,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage(
+                                        'assets/images/ceria256white.png')),
+                              ),
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                            onTap: () {},
+                            child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.purple,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage(
+                                        'assets/images/ceria256white.png')),
+                              ),
+                            )),
+                      ),
                     ],
                   ),
                 )
