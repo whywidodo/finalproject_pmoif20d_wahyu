@@ -5,7 +5,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     //judul
-    title: 'Splash Screen',
+    title: 'Cerita Indonesia',
     home : SplashScreen(),
   ));
 }

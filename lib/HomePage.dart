@@ -1,9 +1,9 @@
 import 'package:finalproject_pmoif20d_wahyu/About.dart';
+import 'package:finalproject_pmoif20d_wahyu/CeritaFavorite.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -128,10 +128,11 @@ class _HomePageState extends State<HomePage> {
     // setState(() {
     _selectedIndex = index;
     if (index == 0) {
-      Fluttertoast.showToast(msg: "Ini Index 0");
+      // Fluttertoast.showToast(msg: "Ini Index 0");
+      showHomePage();
     } else if (index == 1) {
       //Fluttertoast.showToast(msg: "Ini Index 1");
-      showDetailCeritaG();
+      showFavorite();
     } else if (index == 2) {
       // Fluttertoast.showToast(msg: "Ini Index 2");
       showAboutApp();
@@ -140,6 +141,14 @@ class _HomePageState extends State<HomePage> {
       showBottomSheetLogin();
     }
     // });
+  }
+
+  void showHomePage(){
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  void showFavorite(){
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CeritaFavorite()));
   }
 
   void showDetailCeritaG() {
