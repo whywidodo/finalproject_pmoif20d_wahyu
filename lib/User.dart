@@ -1,5 +1,6 @@
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -28,7 +29,22 @@ class _UserState extends State<User> {
           ),
           backgroundColor: Color(0xFF6A2B84),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.logout_rounded))
+            IconButton(onPressed: () {
+              AwesomeDialog(
+                context: context,
+                dialogType: DialogType.WARNING,
+                headerAnimationLoop: false,
+                animType: AnimType.SCALE,
+                title: 'Logout',
+                desc: 'Apakah Anda yakin akan keluar dari aplikasi?',
+                buttonsTextStyle: const TextStyle(color: Colors.white),
+                btnCancelText: "Tidak",
+                btnOkText: "Ya",
+                btnOkColor: Color(0xFF6A2B84),
+                btnCancelOnPress: () {},
+                btnOkOnPress: () {},
+              ).show();
+            }, icon: const Icon(Icons.logout_rounded))
           ],
         ),
         body: ListView(children: [
@@ -216,6 +232,17 @@ class _UserState extends State<User> {
                   ]))
         ]));
   }
+
+  void backToHome() {
+    Navigator.pop(context);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+
+}
+
+void showExitConfirm(){
+
 }
 
 void showDialogUbah(context) {
@@ -393,21 +420,23 @@ void showDialogKomisi(context) {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0))),
                           labelText: 'Jumlah Penarikan',
-                          isDense: true,
+                          // isDense: true,
                           contentPadding: EdgeInsets.all(10),
                         ),
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
                       child: DropdownButtonFormField(
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
+                                borderRadius: BorderRadius.all(Radius.circular(10.0))
+                            ),
                           ),
-                          isExpanded: true,
-                          hint: const Text("Silakan pilih agama anda"),
+                          isDense: true,
+                          itemHeight: null,
+                          hint: const Text("Pilih Bank Tujuan"),
                           icon: Icon(Icons.keyboard_arrow_down),
                           value: bankDipilih,
                           items: bank.map((String value) {
@@ -417,8 +446,7 @@ void showDialogKomisi(context) {
                           onChanged: (String? value) {
                             {
                               bankDipilih = value!;
-                            }
-                            ;
+                            };
                           }),
                     )
                   ])),
