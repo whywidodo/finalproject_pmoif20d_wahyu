@@ -37,6 +37,7 @@ dependencies:
   confirm_dialog: ^1.0.1
   awesome_dialog: ^2.2.1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
