@@ -1,0 +1,273 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class DetailCeritaBerbayar extends StatefulWidget {
+  const DetailCeritaBerbayar({Key? key}) : super(key: key);
+
+  @override
+  State<DetailCeritaBerbayar> createState() => _DetailCeritaBerbayarState();
+}
+
+class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
+  bool _isFavorited = false;
+  int _favoriteCount = 0;
+
+  void _toggleFavorite() {
+    setState(() {
+      if (_isFavorited) {
+        _favoriteCount -= 1;
+        _isFavorited = false;
+      } else {
+        _favoriteCount += 1;
+        _isFavorited = true;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'Detail Cerita',
+          style: TextStyle(fontFamily: 'PoppinsMedium'),
+        ),
+        backgroundColor: const Color(0xFF6A2B84),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: ListView(
+        children: [
+          Container(
+            padding:
+                const EdgeInsets.only(right: 30, left: 30, top: 20, bottom: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        child: const Text(
+                          'Ayat- Ayat Cinta',
+                          style: TextStyle(
+                              fontSize: 16, fontFamily: 'PoppinsBlack'),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                'Autor Satu, Mei 2021',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: 'PoppinsMedium',
+                                    color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(0),
+                      child: IconButton(
+                        padding: const EdgeInsets.all(0),
+                        alignment: Alignment.centerRight,
+                        icon: (_isFavorited
+                            ? const Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              )
+                            : const Icon(Icons.star_border)),
+                        color: Colors.black,
+                        iconSize: 30,
+                        onPressed: _toggleFavorite,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, right: 30),
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
+                  height: 200,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.purple,
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage('assets/images/ceria256white.png'),
+                      )),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 10),
+                  height: 200,
+                  width: 280,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Kategori',
+                          style: TextStyle(
+                              fontSize: 14, fontFamily: 'PoppinsBlack')),
+                      Text('Kategori',
+                          style: TextStyle(
+                              fontSize: 12, fontFamily: 'PoppinsMedium')),
+                      Text('Ringkasan',
+                          style: TextStyle(
+                              fontSize: 14, fontFamily: 'PoppinsBlack')),
+                      Text(
+                          'Zaman dahulu kala ada sebuah cerita di sebuah perkampungan nelayan Pantai Air Manis di Padang, Sumatera Barat. Ada seorang janda bernama Mande Rubayah yang hidup bersama anak laki-lakinya yang bernama Malin Kundang.',
+                          style: TextStyle(
+                              fontSize: 12, fontFamily: 'PoppinsMedium'),
+                          textAlign: TextAlign.justify),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 10, right: 20, left: 15),
+            margin: EdgeInsets.only(top: 10, right: 50, left: 30),
+            child: Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(170, 40),
+                      maximumSize: const Size(170, 40),
+                      primary: Colors.purple,
+                      onPrimary: Colors.white,
+                      onSurface: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      textStyle: const TextStyle(
+                          fontFamily: 'PoppinsThin', fontSize: 15)),
+                  icon: const Icon(
+                    Icons.shopping_cart,
+                    size: 20,
+                  ),
+                  label: Text('Rp. 20.000,-'),
+                ),
+                SizedBox(
+                  width: 25,
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(0),
+                      minimumSize: const Size(170, 40),
+                      maximumSize: const Size(170, 40),
+                      primary: Colors.purple,
+                      onPrimary: Colors.white,
+                      onSurface: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      textStyle: const TextStyle(
+                          fontFamily: 'PoppinsThin', fontSize: 15)),
+                  icon: const Icon(
+                    Icons.list_alt_rounded,
+                    size: 20,
+                  ),
+                  label: Text('Coba Gratis'),
+                ),
+              ],
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 35, right: 35),
+              child: Divider(
+                color: Colors.black12,
+                thickness: 1,
+                height: 30,
+              )),
+          Container(
+            margin: EdgeInsets.only(left: 35),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Cerita Lainnya',
+                  style: TextStyle(fontSize: 12, fontFamily: 'PoppinsBlack'),
+                ),
+              ],
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 25, top: 10),
+              height: 200,
+              child: ListView(scrollDirection: Axis.horizontal, children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.purple,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(
+                                  'assets/images/ceria256white.png')),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.purple,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(
+                                  'assets/images/ceria256white.png')),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.purple,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(
+                                  'assets/images/ceria256white.png')),
+                        ),
+                      )),
+                ),
+              ]))
+        ],
+      ),
+    );
+  }
+}
