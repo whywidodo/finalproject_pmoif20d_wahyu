@@ -91,8 +91,7 @@ class _UserState extends State<User> {
                                     fontSize: 13,
                                     fontFamily: 'PoppinsMedium',
                                     height: 3),
-                              ),
-                            ],
+                              )],
                           ))
                         ])),
                     Container(
