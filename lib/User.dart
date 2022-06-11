@@ -1,10 +1,7 @@
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'TambahCerita.dart';
 
 List<String> bank = ["Pilih Bank Tujuan", "BRI", "BNI", "BCA", "Mandiri"];
@@ -27,31 +24,33 @@ class _UserState extends State<User> {
             'User',
             style: TextStyle(fontFamily: 'PoppinsMedium'),
           ),
-          backgroundColor: Color(0xFF6A2B84),
+          backgroundColor: const Color(0xFF6A2B84),
           actions: [
-            IconButton(onPressed: () {
-              AwesomeDialog(
-                context: context,
-                dialogType: DialogType.WARNING,
-                headerAnimationLoop: false,
-                animType: AnimType.SCALE,
-                title: 'Logout',
-                desc: 'Apakah Anda yakin akan keluar dari aplikasi?',
-                buttonsTextStyle: const TextStyle(color: Colors.white),
-                btnCancelText: "Tidak",
-                btnOkText: "Ya",
-                btnOkColor: Color(0xFF6A2B84),
-                btnCancelOnPress: () {},
-                btnOkOnPress: () {},
-              ).show();
-            }, icon: const Icon(Icons.logout_rounded))
+            IconButton(
+                onPressed: () {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.WARNING,
+                    headerAnimationLoop: false,
+                    animType: AnimType.SCALE,
+                    title: 'Logout',
+                    desc: 'Apakah Anda yakin akan keluar dari aplikasi?',
+                    buttonsTextStyle: const TextStyle(color: Colors.white),
+                    btnCancelText: "Tidak",
+                    btnOkText: "Ya",
+                    btnOkColor: const Color(0xFF6A2B84),
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: () {},
+                  ).show();
+                },
+                icon: const Icon(Icons.logout_rounded))
           ],
         ),
         body: ListView(children: [
           Container(
               height: 250,
-              color: Color(0xFF6A2B84),
-              padding: EdgeInsets.all(3),
+              color: const Color(0xFF6A2B84),
+              padding: const EdgeInsets.all(3),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -92,8 +91,7 @@ class _UserState extends State<User> {
                                     fontSize: 13,
                                     fontFamily: 'PoppinsMedium',
                                     height: 3),
-                              ),
-                            ],
+                              )],
                           ))
                         ])),
                     Container(
@@ -105,13 +103,13 @@ class _UserState extends State<User> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => TambahCerita()));
+                                        builder: (context) => const TambahCerita()));
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(130, 30),
                                   maximumSize: const Size(130, 30),
                                   primary: Colors.white,
-                                  onPrimary: Color(0xFF6A2B84),
+                                  onPrimary: const Color(0xFF6A2B84),
                                   onSurface: Colors.purple,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50)),
@@ -122,7 +120,7 @@ class _UserState extends State<User> {
                                 Icons.list_alt_rounded,
                                 size: 15,
                               ),
-                              label: Text('Tambah Cerita')),
+                              label: const Text('Tambah Cerita')),
                           ElevatedButton.icon(
                               onPressed: () {
                                 showDialogKomisi(context);
@@ -131,7 +129,7 @@ class _UserState extends State<User> {
                                   minimumSize: const Size(115, 30),
                                   maximumSize: const Size(115, 30),
                                   primary: Colors.white,
-                                  onPrimary: Color(0xFF6A2B84),
+                                  onPrimary: const Color(0xFF6A2B84),
                                   onSurface: Colors.purple,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50)),
@@ -142,7 +140,7 @@ class _UserState extends State<User> {
                                 Icons.credit_card_outlined,
                                 size: 15,
                               ),
-                              label: Text('Tarik Komisi')),
+                              label: const Text('Tarik Komisi')),
                           ElevatedButton.icon(
                               onPressed: () {
                                 showDialogUbah(context);
@@ -151,7 +149,7 @@ class _UserState extends State<User> {
                                   minimumSize: const Size(100, 30),
                                   maximumSize: const Size(100, 30),
                                   primary: Colors.white,
-                                  onPrimary: Color(0xFF6A2B84),
+                                  onPrimary: const Color(0xFF6A2B84),
                                   onSurface: Colors.purple,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50)),
@@ -162,13 +160,13 @@ class _UserState extends State<User> {
                                 Icons.edit_outlined,
                                 size: 15,
                               ),
-                              label: Text('Edit Profil')),
+                              label: const Text('Edit Profil')),
                         ],
                       ),
                     )
                   ])),
           Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -179,10 +177,10 @@ class _UserState extends State<User> {
                     ),
                     Container(
                         decoration: BoxDecoration(
-                            color: Color(0xFF9B5DB5),
+                            color: const Color(0xFF9B5DB5),
                             borderRadius: BorderRadius.circular(8)),
-                        margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.only(left: 10),
+                        margin: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -205,7 +203,22 @@ class _UserState extends State<User> {
                                   tooltip: 'Edit Cerita',
                                 ),
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.QUESTION,
+                                        headerAnimationLoop: false,
+                                        animType: AnimType.SCALE,
+                                        title: 'Hapus',
+                                        desc: 'Apa anda yakin akan menghapus cerita ini?',
+                                        buttonsTextStyle: const TextStyle(color: Colors.white),
+                                        btnCancelText: "Tidak",
+                                        btnOkText: "Ya",
+                                        btnOkColor: const Color(0xFF6A2B84),
+                                        btnCancelOnPress: () {},
+                                        btnOkOnPress: () {},
+                                      ).show();
+                                    },
                                     icon: const Icon(
                                       Icons.delete,
                                       color: Colors.white,
@@ -218,7 +231,7 @@ class _UserState extends State<User> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DetailCeritaGratis()));
+                                                const DetailCeritaGratis()));
                                   },
                                   icon: const Icon(
                                     Icons.remove_red_eye_sharp,
@@ -235,15 +248,12 @@ class _UserState extends State<User> {
 
   void backToHome() {
     Navigator.pop(context);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
-
-
 }
 
-void showExitConfirm(){
-
-}
+void showExitConfirm() {}
 
 void showDialogUbah(context) {
   showDialog(
@@ -254,7 +264,7 @@ void showDialogUbah(context) {
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.only(left: 25.0, right: 10.0),
+                  padding: const EdgeInsets.only(left: 25.0, right: 10.0),
                   child: Row(
                     children: <Widget>[
                       const Expanded(
@@ -265,7 +275,7 @@ void showDialogUbah(context) {
                         ),
                       ),
                       IconButton(
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.pop(context);
                           })
@@ -314,9 +324,9 @@ void showDialogUbah(context) {
                               isDense: true,
                               contentPadding: EdgeInsets.all(10),
                             ))),
-                    Divider(indent: 20, endIndent: 20),
+                    const Divider(indent: 20, endIndent: 20),
                     Container(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: const Text(
                         '*Abaikan jika tidak mengganti password',
                         style: TextStyle(
@@ -354,7 +364,7 @@ void showDialogUbah(context) {
                               contentPadding: EdgeInsets.all(10),
                             ))),
                     Container(
-                        margin: EdgeInsets.all(25),
+                        margin: const EdgeInsets.all(25),
                         child: Row(
                           children: <Widget>[
                             Expanded(
@@ -374,13 +384,9 @@ void showDialogUbah(context) {
                                         fontFamily: 'PoppinsMedium',
                                         color: Color(0xffffffff),
                                       ))),
-                            )
-                          ],
-                        ))
-                  ]))
-            ]);
-      });
-}
+                            )],))
+                  ]))]);
+      });}
 
 void showDialogKomisi(context) {
   showDialog(
@@ -391,7 +397,7 @@ void showDialogKomisi(context) {
                 borderRadius: BorderRadius.all(Radius.circular(20.0))),
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.only(left: 25.0, right: 10.0),
+                  padding: const EdgeInsets.only(left: 25.0, right: 10.0),
                   child: Row(
                     children: <Widget>[
                       const Expanded(
@@ -402,7 +408,7 @@ void showDialogKomisi(context) {
                         ),
                       ),
                       IconButton(
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.pop(context);
                           })
@@ -426,29 +432,28 @@ void showDialogKomisi(context) {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 5, bottom: 5),
-                      child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0))
-                            ),
-                          ),
-                          isDense: true,
-                          itemHeight: null,
-                          hint: const Text("Pilih Bank Tujuan"),
-                          icon: Icon(Icons.keyboard_arrow_down),
-                          value: bankDipilih,
-                          items: bank.map((String value) {
-                            return DropdownMenuItem(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          onChanged: (String? value) {
-                            {
-                              bankDipilih = value!;
-                            };
-                          }),
-                    )
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 5, bottom: 5),
+                          child: DropdownButtonFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                              ),
+                              isDense: true,
+                              itemHeight: null,
+                              hint: const Text("Pilih Bank Tujuan"),
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              value: bankDipilih,
+                              items: bank.map((String value) {
+                                return DropdownMenuItem(
+                                    value: value, child: Text(value));
+                              }).toList(),
+                              onChanged: (String? value) {
+                                {
+                                  bankDipilih = value!;
+                                }
+                              }))
                   ])),
               Container(
                   padding: const EdgeInsets.only(
@@ -473,7 +478,7 @@ void showDialogKomisi(context) {
                     contentPadding: EdgeInsets.all(10),
                   ))),
               Container(
-                  margin: EdgeInsets.all(25),
+                  margin: const EdgeInsets.all(25),
                   child: Row(
                     children: <Widget>[
                       Expanded(
@@ -493,9 +498,7 @@ void showDialogKomisi(context) {
                                   fontFamily: 'PoppinsMedium',
                                   color: Color(0xffffffff),
                                 ))),
-                      )
-                    ],
-                  ))
+                      )]))
             ]);
       });
 }
