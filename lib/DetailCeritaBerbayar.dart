@@ -122,7 +122,7 @@ class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
                 Container(
                   margin: EdgeInsets.only(left: 10),
                   height: 200,
-                  width: 280,
+                  width: 170,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -136,7 +136,7 @@ class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
                           style: TextStyle(
                               fontSize: 14, fontFamily: 'PoppinsBlack')),
                       Text(
-                          'Zaman dahulu kala ada sebuah cerita di sebuah perkampungan nelayan Pantai Air Manis di Padang, Sumatera Barat. Ada seorang janda bernama Mande Rubayah yang hidup bersama anak laki-lakinya yang bernama Malin Kundang.',
+                          'Zaman dahulu kala ada sebuah cerita di sebuah perkampungan nelayan Pantai Air Manis di Padang, Sumatera Barat. Ada seorang janda bernama Mande Rubayah.',
                           style: TextStyle(
                               fontSize: 12, fontFamily: 'PoppinsMedium'),
                           textAlign: TextAlign.justify),
@@ -147,25 +147,24 @@ class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 10, right: 20, left: 15),
-            margin: EdgeInsets.only(top: 10, right: 50, left: 30),
+            padding: EdgeInsets.only(top: 10, left: 40),
             child: Row(
               children: [
                 ElevatedButton.icon(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(170, 40),
-                      maximumSize: const Size(170, 40),
+                      minimumSize: const Size(140, 40),
+                      maximumSize: const Size(140, 40),
                       primary: Colors.purple,
                       onPrimary: Colors.white,
                       onSurface: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                       textStyle: const TextStyle(
-                          fontFamily: 'PoppinsThin', fontSize: 15)),
+                          fontFamily: 'PoppinsThin', fontSize: 13)),
                   icon: const Icon(
                     Icons.shopping_cart,
-                    size: 20,
+                    size: 18,
                   ),
                   label: Text('Rp. 20.000,-'),
                 ),
@@ -176,18 +175,18 @@ class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(0),
-                      minimumSize: const Size(170, 40),
-                      maximumSize: const Size(170, 40),
+                      minimumSize: const Size(140, 40),
+                      maximumSize: const Size(140, 40),
                       primary: Colors.purple,
                       onPrimary: Colors.white,
                       onSurface: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                       textStyle: const TextStyle(
-                          fontFamily: 'PoppinsThin', fontSize: 15)),
+                          fontFamily: 'PoppinsThin', fontSize: 13)),
                   icon: const Icon(
                     Icons.list_alt_rounded,
-                    size: 20,
+                    size: 18,
                   ),
                   label: Text('Coba Gratis'),
                 ),
