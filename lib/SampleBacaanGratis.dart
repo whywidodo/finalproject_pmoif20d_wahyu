@@ -7,19 +7,11 @@ class SampleBacaanGratis extends StatefulWidget {
   @override
   _SampleBacaanGratisState createState() => _SampleBacaanGratisState();
 }
-
 class _SampleBacaanGratisState extends State<SampleBacaanGratis> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: (){
-            print('clicked once');
-
-          },
-        ),
         centerTitle: true,
         title: const Text(
           'Malin Kundang',
