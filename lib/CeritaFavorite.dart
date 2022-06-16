@@ -121,7 +121,7 @@ class _CeritaFavoriteState extends State<CeritaFavorite> {
                                     ]
                                 )
                             ),
-
+                      //NILA
             ]
         )
     );
