@@ -40,7 +40,7 @@ class _CeritaFavoriteState extends State<CeritaFavorite> {
             )
           ],
         ),
-        body: ListView(
+        body: ListView(scrollDirection: Axis.vertical,
             children:[
               Container(
                 padding:
