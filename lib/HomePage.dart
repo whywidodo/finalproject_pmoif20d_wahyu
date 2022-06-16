@@ -130,7 +130,6 @@ class _HomePageState extends ResumableState<HomePage> {
                       },
                     ),
                     Text("${widgets[i]["judul_cerita"]}", style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-
                   ],
                 ),
 
