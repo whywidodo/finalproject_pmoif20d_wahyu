@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'package:finalproject_pmoif20d_wahyu/About.dart';
 import 'package:finalproject_pmoif20d_wahyu/CeritaFavorite.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:need_resume/need_resume.dart';
+import './Constant/ConstantApi.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,10 +18,26 @@ class HomePage extends StatefulWidget {
 int _selectedIndex = 0;
 
 
-class _HomePageState extends State<HomePage> {
-  final List<Map> myProducts =
-      List.generate(20, (index) => {"id": index, "name": "Cerita $index"})
-          .toList();
+class _HomePageState extends ResumableState<HomePage> {
+  List widgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  void onReady() {}
+
+  @override
+  void onResume() {
+    loadData();
+  }
+
+  @override
+  void onPause() {}
+
+  // final List<Map> myProducts = List.generate(4, (index) => {"id": index, "name": "Cerita $index"}).toList();
 
   final ButtonStyle style =
       ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 14));
@@ -96,49 +116,25 @@ class _HomePageState extends State<HomePage> {
                 childAspectRatio: 3 / 2,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20),
-            itemCount: myProducts.length,
-            itemBuilder: (BuildContext ctx, index) {
+            itemCount: widgets.length,
+            itemBuilder: (BuildContext ctx, int i) {
               return Card(
-                child: InkResponse(
-                  child: Image.asset('assets/images/ceria256color.png'),
-                  onTap: (){
-                    // print(index);
-                  },
-                ),
-              );
-              // return Container(
-                // child: Card(
-                //   child: Container(
-                //     width: double.infinity,
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(10.0),
-                //       image: const DecorationImage(fit: BoxFit.cover, image: AssetImage('assets/images/ceria256color.png'))
-                //     ),
-                //     // child: const Padding(
-                //     //   padding: EdgeInsets.all(10.0),
-                //     //   child: Text('Judul Cerita'),
-                //     // ),
-                //   ),
-                //
-                // ),
-                // alignment: Alignment.center,
-                // decoration: BoxDecoration(
-                //   image: const DecorationImage(
-                //     image: AssetImage('assets/images/ceria256color.png'),
-                //   ),
-                //   color: Colors.white,
-                //   borderRadius: BorderRadius.circular(5),
-                //   boxShadow: [
-                //     BoxShadow(
-                //         color: Colors.grey.withOpacity(0.1),
-                //         spreadRadius: 2,
-                //         blurRadius: 1,
-                //         offset: const Offset(0, 1)),
-                //   ],
-                // ),
-                // child: Text(myProducts[index]["name"]),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    InkResponse(
+                      child: Image.asset('assets/images/ceria256color.png',height: 70, width: MediaQuery.of(context).size.width, fit:BoxFit.cover),
+                      onTap: (){
+                        print(i);
+                      },
+                    ),
+                    Text("${widgets[i]["judul_cerita"]}", style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
 
-              // );
+                  ],
+                ),
+
+              );
             }),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -147,17 +143,23 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Beranda"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.star_border), label: "Favorit"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.info_outline), label: "Tentang"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_outlined), label: "Profil"),
+          BottomNavigationBarItem(icon: Icon(Icons.star_border), label: "Favorit"),
+          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "Tentang"),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined), label: "Profil"),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  Future<void> loadData() async {
+    var dataURL = Uri.parse(baseURL + 'cerita');
+    http.Response response = await http.get(dataURL);
+
+    setState(() {
+      widgets = jsonDecode(response.body);
+    });
   }
 
   void _onItemTapped(int index) {
