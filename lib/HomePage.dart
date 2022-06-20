@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './Constant/ConstantApi.dart';
+import './API/CallApi.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,8 +23,13 @@ int _selectedIndex = 0;
 
 class _HomePageState extends ResumableState<HomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var txtEditEmail = TextEditingController();
-  var txtEditPwd = TextEditingController();
+  var txtLoginEmail = TextEditingController();
+  var txtLoginPassword = TextEditingController();
+  var txtRegUser = TextEditingController();
+  var txtRegNama = TextEditingController();
+  var txtRegEmail = TextEditingController();
+  var txtRegPass1 = TextEditingController();
+  var txtRegPass2 = TextEditingController();
 
   List widgets = [];
 
@@ -163,24 +169,51 @@ class _HomePageState extends ResumableState<HomePage> {
   void _validateInputs() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      doLogin(txtEditEmail.text, txtEditPwd.text);
-      debugPrint(txtEditEmail.text);
-      debugPrint(txtEditPwd.text);
+      doLogin(txtLoginEmail.text, txtLoginPassword.text);
+    }
+  }
+
+  void _validateRegister() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // debugPrint(txtRegEmail.text);
+      // debugPrint(txtRegUser.text);
+      // debugPrint(txtRegPass1.text);
+      // debugPrint(txtRegPass2.text);
+      doRegistrasi(
+        txtRegUser.text,
+        txtRegNama.text,
+        txtRegEmail.text,
+        txtRegPass1.text,
+        txtRegPass2.text
+      );
     }
   }
 
   doLogin(email, password) async {
     try {
+      debugPrint(email);
+      debugPrint(password);
       final response = await http.post(
           // Uri.parse(baseURL + 'cerita');
           Uri.parse(baseURL + 'users'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+            // 'Content-Type': 'application/json; charset=UTF-8',
+            // 'Access-Control-Allow-Origin': '*',
+            // 'Access-Control-Allow-Headers': '*',
+            // 'Access-Control-Allow-Credentials': 'true',
+            // 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE'
+          },
           body: jsonEncode({
             "email": email,
             "password": password,
-          }));
+          }),
+          encoding: Encoding.getByName("utf-8"));
 
       final output = jsonDecode(response.body);
+      debugPrint(output);
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -214,10 +247,22 @@ class _HomePageState extends ResumableState<HomePage> {
           timeInSecForIosWeb: 1,
           backgroundColor: const Color(0xFF6A2B84),
           textColor: Colors.white,
-          fontSize: 13.0
-      );
+          fontSize: 13.0);
     }
   }
+
+  doRegistrasi(username, namalengkap, email, password, password2) async {
+    var data = {
+      'kode_user': "KU0002",
+      'email': email,
+      'nama_lengkap': namalengkap,
+      'username': username,
+      'password': password,
+    };
+    bool res = await CallApi().postData(data, 'users', context);
+    Navigator.pop(context);
+  }
+
 
   saveSession(String email) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -315,16 +360,17 @@ class _HomePageState extends ResumableState<HomePage> {
                       keyboardType: TextInputType.emailAddress,
                       autofocus: false,
                       validator: (email) =>
-                      email != null && !EmailValidator.validate(email)
-                          ? 'Masukkan email yang valid'
-                          : null,
-                      controller: txtEditEmail,
+                          email != null && !EmailValidator.validate(email)
+                              ? 'Masukkan email yang valid'
+                              : null,
+                      controller: txtLoginEmail,
                       onSaved: (String? val) {
-                        txtEditEmail.text = val!;
+                        txtLoginEmail.text = val!;
                       },
                       decoration: InputDecoration(
                         hintText: 'Masukkan Email',
-                        hintStyle: const TextStyle(color: Colors.black45, fontSize: 12),
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
                         labelText: "Masukkan Email",
                         labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
                         prefixIcon: const Icon(
@@ -334,17 +380,17 @@ class _HomePageState extends ResumableState<HomePage> {
                         fillColor: Colors.white,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          borderSide: const BorderSide(color: Color(0xFF6A2B84), width: 1.2),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          borderSide: const BorderSide(color: Color(0xFF6A2B84)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF6A2B84)),
                         ),
                       ),
-                      style:
-                      const TextStyle(fontSize: 12.0, color: Colors.black54)
-                  ),
-
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
                 ),
                 Container(
                   padding: const EdgeInsets.only(
@@ -361,13 +407,14 @@ class _HomePageState extends ResumableState<HomePage> {
                           return null;
                         }
                       },
-                      controller: txtEditPwd,
+                      controller: txtLoginPassword,
                       onSaved: (String? val) {
-                        txtEditPwd.text = val!;
+                        txtLoginPassword.text = val!;
                       },
                       decoration: InputDecoration(
                         hintText: 'Masukkan Password',
-                        hintStyle: const TextStyle(color: Colors.black45, fontSize: 12),
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
                         labelText: 'Masukkan Password',
                         labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
                         prefixIcon: const Icon(
@@ -377,16 +424,17 @@ class _HomePageState extends ResumableState<HomePage> {
                         fillColor: Colors.white,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          borderSide: const BorderSide(color: Color(0xFF6A2B84), width: 1.2),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          borderSide: const BorderSide(color: Color(0xFF6A2B84)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF6A2B84)),
                         ),
                       ),
-                      style:
-                      const TextStyle(fontSize: 12.0, color: Colors.black54)
-                  ),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
                 ),
                 Container(
                   margin: const EdgeInsets.all(25),
@@ -421,7 +469,8 @@ class _HomePageState extends ResumableState<HomePage> {
                             backgroundColor: const Color(0xffffffff),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                side: const BorderSide(color: Color(0xFF6A2B84))),
+                                side:
+                                    const BorderSide(color: Color(0xFF6A2B84))),
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -443,7 +492,6 @@ class _HomePageState extends ResumableState<HomePage> {
               ],
             ),
           ),
-
         );
       },
     );
@@ -462,101 +510,264 @@ class _HomePageState extends ResumableState<HomePage> {
       builder: (context) {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
-          child: Wrap(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(
-                    top: 20, left: 20, right: 20, bottom: 10),
-                child: const Text("Registrasi",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'PoppinsMedium',
-                        color: Color(0xFF6A2B84))),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 5, bottom: 5),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
-                    labelText: 'Email',
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(14),
-                  ),
+          child: Form(
+            key: _formKey,
+            child: Wrap(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(
+                      top: 20, left: 20, right: 20, bottom: 10),
+                  child: const Text("Registrasi",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'PoppinsMedium',
+                          color: Color(0xFF6A2B84))),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 5, bottom: 5),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
-                    labelText: 'Username',
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(14),
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 5, bottom: 5),
-                child: const TextField(
-                  obscureText: true,
-                  obscuringCharacter: "*",
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
-                    labelText: 'Password',
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(14),
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 5, bottom: 5),
-                child: const TextField(
-                  obscureText: true,
-                  obscuringCharacter: "*",
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0))),
-                    labelText: 'Ulangi Password',
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(14),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                    left: 50, right: 50, top: 25, bottom: 25),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFF6A2B84),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: TextFormField(
+                      cursorColor: Colors.white,
+                      keyboardType: TextInputType.emailAddress,
+                      autofocus: false,
+                      validator: (email) =>
+                          email != null && !EmailValidator.validate(email)
+                              ? 'Masukkan email yang valid'
+                              : null,
+                      controller: txtRegEmail,
+                      onSaved: (String? val) {
+                        txtRegEmail.text = val!;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan Email',
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
+                        labelText: "Email",
+                        labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: Color(0xFF6A2B84),
                         ),
-                        onPressed: () {},
-                        child: const Text(
-                          "Registrasi",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'PoppinsMedium',
-                            color: Color(0xFFFFFFFF),
-                          ),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF6A2B84)),
                         ),
                       ),
-                    )
-                  ],
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
                 ),
-              ),
-            ],
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: TextFormField(
+                      cursorColor: Colors.white,
+                      keyboardType: TextInputType.text,
+                      autofocus: false,
+                      validator: (String? arg) {
+                        if (arg == null || arg.isEmpty) {
+                          return 'Username harus diisi';
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: txtRegUser,
+                      onSaved: (String? val) {
+                        txtRegUser.text = val!;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan Username',
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
+                        labelText: "Username",
+                        labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                        prefixIcon: const Icon(
+                          Icons.account_circle_outlined,
+                          color: Color(0xFF6A2B84),
+                        ),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF6A2B84)),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: TextFormField(
+                      cursorColor: Colors.white,
+                      keyboardType: TextInputType.text,
+                      autofocus: false,
+                      validator: (String? arg) {
+                        if (arg == null || arg.isEmpty) {
+                          return 'Nama lengkap harus diisi';
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: txtRegNama,
+                      onSaved: (String? val) {
+                        txtRegNama.text = val!;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan Nama Lengkap',
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
+                        labelText: "Nama Lengkap",
+                        labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                        prefixIcon: const Icon(
+                          Icons.account_circle_outlined,
+                          color: Color(0xFF6A2B84),
+                        ),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide:
+                          const BorderSide(color: Color(0xFF6A2B84)),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: TextFormField(
+                      cursorColor: Colors.white,
+                      keyboardType: TextInputType.text,
+                      autofocus: false,
+                      obscureText: true,
+                      validator: (String? arg) {
+                        if (arg == null || arg.isEmpty) {
+                          return 'Password harus diisi';
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: txtRegPass1,
+                      onSaved: (String? val) {
+                        txtRegPass1.text = val!;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan Password',
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
+                        labelText: 'Password',
+                        labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                        prefixIcon: const Icon(
+                          Icons.lock_outline,
+                          color: Color(0xFF6A2B84),
+                        ),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF6A2B84)),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  child: TextFormField(
+                      cursorColor: Colors.white,
+                      keyboardType: TextInputType.text,
+                      autofocus: false,
+                      obscureText: true,
+                      validator: (String? arg) {
+                        if (arg == null || arg.isEmpty) {
+                          return 'Password harus diisi';
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: txtRegPass2,
+                      onSaved: (String? val) {
+                        txtRegPass2.text = val!;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Masukan Password Kembali',
+                        hintStyle: const TextStyle(
+                            color: Colors.black45, fontSize: 12),
+                        labelText: 'Ulangi Password',
+                        labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                        prefixIcon: const Icon(
+                          Icons.lock_outline,
+                          color: Color(0xFF6A2B84),
+                        ),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6A2B84), width: 1.2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF6A2B84)),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54)),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 50, right: 50, top: 25, bottom: 25),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xFF6A2B84),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {
+                            _validateRegister();
+                          },
+                          child: const Text(
+                            "Registrasi",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'PoppinsMedium',
+                              color: Color(0xFFFFFFFF),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
