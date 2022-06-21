@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:need_resume/need_resume.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './Constant/ConstantApi.dart';
@@ -32,6 +32,8 @@ class _HomePageState extends ResumableState<HomePage> {
   var txtRegPass2 = TextEditingController();
 
   List widgets = [];
+
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -176,10 +178,6 @@ class _HomePageState extends ResumableState<HomePage> {
   void _validateRegister() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // debugPrint(txtRegEmail.text);
-      // debugPrint(txtRegUser.text);
-      // debugPrint(txtRegPass1.text);
-      // debugPrint(txtRegPass2.text);
       doRegistrasi(
         txtRegUser.text,
         txtRegNama.text,
@@ -190,64 +188,42 @@ class _HomePageState extends ResumableState<HomePage> {
     }
   }
 
-  doLogin(email, password) async {
-    try {
-      debugPrint(email);
-      debugPrint(password);
-      final response = await http.post(
-          // Uri.parse(baseURL + 'cerita');
-          Uri.parse(baseURL + 'users'),
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
-            // 'Content-Type': 'application/json; charset=UTF-8',
-            // 'Access-Control-Allow-Origin': '*',
-            // 'Access-Control-Allow-Headers': '*',
-            // 'Access-Control-Allow-Credentials': 'true',
-            // 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE'
-          },
-          body: jsonEncode({
-            "email": email,
-            "password": password,
-          }),
-          encoding: Encoding.getByName("utf-8"));
-
-      final output = jsonDecode(response.body);
-      debugPrint(output);
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-            output['message'],
-            style: const TextStyle(fontSize: 16),
-          )),
-        );
-
-        if (output['success'] == true) {
-          saveSession(email);
-        }
-        //debugPrint(output['message']);
-      } else {
-        debugPrint(output['message']);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-            output.toString(),
-            style: const TextStyle(fontSize: 16),
-          )),
-        );
+  doLogin(String email, pass) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    Map data = {
+      'email': email,
+      'password': pass
+    };
+    var response = await http.post(Uri.parse(baseURL + 'api/login'), body: data);
+    if(response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = (jsonDecode(response.body) as Map<String,dynamic>);
+      if(jsonResponse["status"] == 200) {
+        setState(() {
+          _isLoading = false;
+        });
+        await pref.setString("token", jsonResponse["data"]["token"]);
+        await pref.setString("email", email);
+        await pref.setBool("is_login", true);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const User()));
+      }else if(jsonResponse["status"] == 500){
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.RIGHSLIDE,
+          headerAnimationLoop: true,
+          title: 'Login Gagal',
+          desc:'Silahkan periksa email dan password Anda.',
+          btnOkOnPress: () {},
+          btnOkIcon: Icons.cancel,
+          btnOkColor: Colors.red,
+        ).show();
       }
-    } catch (e) {
-      // print('$e');
-      debugPrint('$e');
-      Fluttertoast.showToast(
-          msg: '$e',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: const Color(0xFF6A2B84),
-          textColor: Colors.white,
-          fontSize: 13.0);
+    }
+    else {
+      setState(() {
+        _isLoading = false;
+      });
+      print(response.body);
     }
   }
 
@@ -263,19 +239,14 @@ class _HomePageState extends ResumableState<HomePage> {
     Navigator.pop(context);
   }
 
-
-  saveSession(String email) async {
+  void checkLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString("email", email);
-    await pref.setBool("is_login", true);
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => const User(),
-      ),
-      (route) => false,
-    );
+    var islogin = pref.getBool("is_login");
+    if (islogin != null && islogin) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const User()));
+    }else{
+      showBottomSheetLogin();
+    }
   }
 
   Future<void> loadData() async {
@@ -297,7 +268,7 @@ class _HomePageState extends ResumableState<HomePage> {
     } else if (index == 2) {
       showAboutApp();
     } else if (index == 3) {
-      showBottomSheetLogin();
+      checkLogin();
     }
     // });
   }
