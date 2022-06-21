@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'TambahCerita.dart';
 
@@ -15,6 +17,9 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,14 +62,36 @@ class _UserState extends State<User> {
                     Container(
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
+                            children: <Widget>[
                           Container(
-                            child: const CircleAvatar(
-                                backgroundColor: Colors.white,
-                                backgroundImage:
-                                    AssetImage('assets/images/profile.png'),
-                                radius: 50),
-                          ),
+                              child: Stack(
+                            children: [
+                              CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  backgroundImage: _imageFile == null
+                                      ? const AssetImage(
+                                              'assets/images/profile.png')
+                                          as ImageProvider
+                                      : FileImage(File(_imageFile!.path)),
+                                  radius: 50),
+                              Positioned(
+                                  bottom: 5.0,
+                                  right: 0.0,
+                                  child: InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: ((builder) =>
+                                              bottomSheet(context)),
+                                        );
+                                      },
+                                      child: const Icon(
+                                        Icons.camera_alt,
+                                        color: Color(0xFFc4aacf),
+                                        size: 25.0,
+                                      )))
+                            ],
+                          )),
                           Container(
                               child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +118,8 @@ class _UserState extends State<User> {
                                     fontSize: 13,
                                     fontFamily: 'PoppinsMedium',
                                     height: 3),
-                              )],
+                              )
+                            ],
                           ))
                         ])),
                     Container(
@@ -103,7 +131,8 @@ class _UserState extends State<User> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const TambahCerita()));
+                                        builder: (context) =>
+                                            const TambahCerita()));
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(130, 30),
@@ -210,8 +239,10 @@ class _UserState extends State<User> {
                                         headerAnimationLoop: false,
                                         animType: AnimType.SCALE,
                                         title: 'Hapus',
-                                        desc: 'Apa anda yakin akan menghapus cerita ini?',
-                                        buttonsTextStyle: const TextStyle(color: Colors.white),
+                                        desc:
+                                            'Apa anda yakin akan menghapus cerita ini?',
+                                        buttonsTextStyle: const TextStyle(
+                                            color: Colors.white),
                                         btnCancelText: "Tidak",
                                         btnOkText: "Ya",
                                         btnOkColor: const Color(0xFF6A2B84),
@@ -244,6 +275,63 @@ class _UserState extends State<User> {
                             ]))
                   ]))
         ]));
+  }
+
+  Widget bottomSheet(context) {
+    return Container(
+        height: 100.0,
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
+        child: Column(children: <Widget>[
+          const Text("Pilih Foto Profil",
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontFamily: "PoppinsMedium",
+                  color: Color(0xFF6A2B84))),
+          SizedBox(
+            height: 20,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            FlatButton.icon(
+                icon: const Icon(Icons.camera, color: Color(0xFF6A2B84)),
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+                label: const Text(
+                  "Camera",
+                  style: TextStyle(
+                      fontFamily: "PoppinsMedium", color: Color(0xFF6A2B84)),
+                )),
+            FlatButton.icon(
+                icon: const Icon(Icons.image, color: Color(0xFF6A2B84)),
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+                label: const Text("Gallery",
+                    style: TextStyle(
+                        fontFamily: "PoppinsMedium",
+                        color: Color(0xFF6A2B84)))),
+          ])
+        ]));
+  }
+
+  void takePhoto(ImageSource source) async {
+    // final pickedFile = await _picker.getImage(
+    //   source: source,
+    // );
+    // setState(() {
+    //   _imageFile = pickedFile!;
+    // });
+    final image = await _picker.pickImage(source: source);
+    setState(() {
+      _imageFile = File(image!.path);
+      _load = false;
+    });
   }
 
   void backToHome() {
@@ -384,9 +472,13 @@ void showDialogUbah(context) {
                                         fontFamily: 'PoppinsMedium',
                                         color: Color(0xffffffff),
                                       ))),
-                            )],))
-                  ]))]);
-      });}
+                            )
+                          ],
+                        ))
+                  ]))
+            ]);
+      });
+}
 
 void showDialogKomisi(context) {
   showDialog(
@@ -434,26 +526,26 @@ void showDialogKomisi(context) {
                     Container(
                         padding: const EdgeInsets.only(
                             left: 20, right: 20, top: 5, bottom: 5),
-                          child: DropdownButtonFormField(
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                              ),
-                              isDense: true,
-                              itemHeight: null,
-                              hint: const Text("Pilih Bank Tujuan"),
-                              icon: const Icon(Icons.keyboard_arrow_down),
-                              value: bankDipilih,
-                              items: bank.map((String value) {
-                                return DropdownMenuItem(
-                                    value: value, child: Text(value));
-                              }).toList(),
-                              onChanged: (String? value) {
-                                {
-                                  bankDipilih = value!;
-                                }
-                              }))
+                        child: DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                            ),
+                            isDense: true,
+                            itemHeight: null,
+                            hint: const Text("Pilih Bank Tujuan"),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            value: bankDipilih,
+                            items: bank.map((String value) {
+                              return DropdownMenuItem(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                            onChanged: (String? value) {
+                              {
+                                bankDipilih = value!;
+                              }
+                            }))
                   ])),
               Container(
                   padding: const EdgeInsets.only(
@@ -479,26 +571,26 @@ void showDialogKomisi(context) {
                   ))),
               Container(
                   margin: const EdgeInsets.all(25),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: const Color(0xFF6A2B84),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xFF6A2B84),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Proses",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'PoppinsMedium',
-                                  color: Color(0xffffffff),
-                                ))),
-                      )]))
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Proses",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'PoppinsMedium',
+                                color: Color(0xffffffff),
+                              ))),
+                    )
+                  ]))
             ]);
       });
 }
