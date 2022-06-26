@@ -10,21 +10,21 @@ List<String> cerita = [
 ];
 String ceritaDipilih = "Pilih Kategori Cerita";
 
-class TambahCerita extends StatefulWidget {
-  const TambahCerita({Key? key}) : super(key: key);
+class EditCerita extends StatefulWidget {
+  const EditCerita({Key? key}) : super(key: key);
 
   @override
-  _TambahCeritaState createState() => _TambahCeritaState();
+  _EditCeritaState createState() => _EditCeritaState();
 }
 
-class _TambahCeritaState extends State<TambahCerita> {
+class _EditCeritaState extends State<EditCerita> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text(
-            'Tambah Cerita',
+            'Edit Detail Cerita',
             style: TextStyle(fontFamily: 'PoppinsMedium'),
           ),
           backgroundColor: const Color(0xFF6A2B84),
@@ -165,7 +165,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("Proses",
+                      child: const Text("Update",
                           style: TextStyle(
                             fontSize: 12,
                             fontFamily: 'PoppinsMedium',

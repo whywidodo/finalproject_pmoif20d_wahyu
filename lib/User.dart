@@ -4,10 +4,14 @@ import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'EditCerita.dart';
 import 'TambahCerita.dart';
+import 'HomePage.dart';
 
 List<String> bank = ["Pilih Bank Tujuan", "BRI", "BNI", "BCA", "Mandiri"];
 String bankDipilih = "Pilih Bank Tujuan";
+var valueEmail = "";
 
 class User extends StatefulWidget {
   const User({Key? key}) : super(key: key);
@@ -21,9 +25,31 @@ class _UserState extends State<User> {
   final ImagePicker _picker = ImagePicker();
 
   @override
+  void initState() {
+    super.initState();
+    getValue();
+  }
+
+  getValue() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var emailSession = pref.getString("email");
+    String? emailSharing = emailSession;
+    valueEmail = emailSharing.toString();
+    return valueEmail;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomePage()));
+            },
+          ),
           centerTitle: true,
           title: const Text(
             'User',
@@ -45,7 +71,9 @@ class _UserState extends State<User> {
                     btnOkText: "Ya",
                     btnOkColor: const Color(0xFF6A2B84),
                     btnCancelOnPress: () {},
-                    btnOkOnPress: () {},
+                    btnOkOnPress: () {
+                      logOut();
+                    },
                   ).show();
                 },
                 icon: const Icon(Icons.logout_rounded))
@@ -96,8 +124,8 @@ class _UserState extends State<User> {
                               child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 "Nama Pengguna",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -105,13 +133,13 @@ class _UserState extends State<User> {
                                     fontFamily: 'PoppinsMedium'),
                               ),
                               Text(
-                                "contohemail@gmail.com",
-                                style: TextStyle(
+                                valueEmail,
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
                                     fontFamily: 'PoppinsMedium'),
                               ),
-                              Text(
+                              const Text(
                                 "Rp 100.000,-",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -223,7 +251,13 @@ class _UserState extends State<User> {
                               Container(
                                   child: Row(children: <Widget>[
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EditCerita()));
+                                  },
                                   icon: const Icon(
                                     Icons.edit,
                                     color: Colors.white,
@@ -321,16 +355,9 @@ class _UserState extends State<User> {
   }
 
   void takePhoto(ImageSource source) async {
-    // final pickedFile = await _picker.getImage(
-    //   source: source,
-    // );
-    // setState(() {
-    //   _imageFile = pickedFile!;
-    // });
     final image = await _picker.pickImage(source: source);
     setState(() {
       _imageFile = File(image!.path);
-      _load = false;
     });
   }
 
@@ -338,6 +365,29 @@ class _UserState extends State<User> {
     Navigator.pop(context);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+
+  logOut() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      pref.remove("token");
+      pref.remove("is_login");
+      pref.remove("email");
+    });
+
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.SCALE,
+      headerAnimationLoop: true,
+      title: 'Logout Berhasil',
+      desc: 'Terimakasih telah menggunakan aplikasi kami.',
+      btnOkOnPress: () {
+        Navigator.pop(context);
+        backToHome();
+      },
+      btnOkIcon: Icons.cancel,
+    ).show();
   }
 }
 
