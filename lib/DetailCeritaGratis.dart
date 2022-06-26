@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DetailCeritaGratis extends StatefulWidget {
   const DetailCeritaGratis({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class DetailCeritaGratis extends StatefulWidget {
 class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
   bool _isFavorited = false;
   int _favoriteCount = 0;
+  String text = 'Isi Text Sharing Ceritanya';
+  String sub = 'Subjek Cerita';
 
   void _toggleFavorite() {
     setState(() {
@@ -37,7 +40,7 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
         actions: [
           IconButton(
             icon: Icon(Icons.share),
-            onPressed: () {},
+            onPressed: text.isEmpty ? null : () => _onShare(context),
           )
         ],
       ),
@@ -265,5 +268,13 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
         ],
       ),
     );
+  }
+  
+  void _onShare(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.share(
+      text,
+      subject: sub,
+      sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 }
