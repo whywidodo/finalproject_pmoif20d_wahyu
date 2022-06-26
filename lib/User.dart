@@ -11,10 +11,15 @@ import 'HomePage.dart';
 
 List<String> bank = ["Pilih Bank Tujuan", "BRI", "BNI", "BCA", "Mandiri"];
 String bankDipilih = "Pilih Bank Tujuan";
-var valueEmail = "";
+// var valueEmail = "";
 
 class User extends StatefulWidget {
-  const User({Key? key}) : super(key: key);
+  User({Key? key}) : super(key: key);
+
+  String uEmail = "";
+  User.withId(this.uEmail, {Key? key}) : super(key: key) {
+    debugPrint(uEmail);
+  }
 
   @override
   _UserState createState() => _UserState();
@@ -24,19 +29,19 @@ class _UserState extends State<User> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
-    getValue();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getValue();
+  // }
 
-  getValue() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var emailSession = pref.getString("email");
-    String? emailSharing = emailSession;
-    valueEmail = emailSharing.toString();
-    return valueEmail;
-  }
+  // getValue() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   var emailSession = pref.getString("email");
+  //   String? emailSharing = emailSession;
+  //   valueEmail = emailSharing.toString();
+  //   return valueEmail;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +138,7 @@ class _UserState extends State<User> {
                                     fontFamily: 'PoppinsMedium'),
                               ),
                               Text(
-                                valueEmail,
+                                widget.uEmail,
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
