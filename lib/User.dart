@@ -1,17 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'EditCerita.dart';
 import 'TambahCerita.dart';
 import 'HomePage.dart';
 
 List<String> bank = ["Pilih Bank Tujuan", "BRI", "BNI", "BCA", "Mandiri"];
 String bankDipilih = "Pilih Bank Tujuan";
-// var valueEmail = "";
 
 class User extends StatefulWidget {
   User({Key? key}) : super(key: key);
@@ -29,19 +31,13 @@ class _UserState extends State<User> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getValue();
-  // }
+  List widgetUsers = [];
 
-  // getValue() async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   var emailSession = pref.getString("email");
-  //   String? emailSharing = emailSession;
-  //   valueEmail = emailSharing.toString();
-  //   return valueEmail;
-  // }
+  @override
+  void initState() {
+    super.initState();
+    loadDataUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,15 +126,16 @@ class _UserState extends State<User> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Nama Pengguna",
-                                style: TextStyle(
+                              Text(
+                                u_namalengkap,
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontFamily: 'PoppinsMedium'),
                               ),
                               Text(
-                                widget.uEmail,
+                                // widget.uEmail,
+                                '$u_email',
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
@@ -378,6 +375,13 @@ class _UserState extends State<User> {
       pref.remove("token");
       pref.remove("is_login");
       pref.remove("email");
+
+      u_id = "";
+      u_kodeuser = "";
+      u_username = "";
+      u_namalengkap = "";
+      u_email = "";
+      u_password = "";
     });
 
     AwesomeDialog(
@@ -394,6 +398,22 @@ class _UserState extends State<User> {
       btnOkIcon: Icons.cancel,
     ).show();
   }
+
+  Future<void> loadDataUsers() async {
+    if('$u_email' != ""){
+      var dataURL = Uri.parse(baseURL + 'users/$u_email');
+      http.Response response = await http.get(dataURL);
+
+      setState(() {
+        widgetUsers = jsonDecode(response.body);
+        u_id = widgetUsers[0]['id'];
+        u_kodeuser = widgetUsers[0]['kode_user'];
+        u_username = widgetUsers[0]['username'];
+        u_namalengkap = widgetUsers[0]['nama_lengkap'];
+      });
+    }
+  }
+
 }
 
 void showExitConfirm() {}
