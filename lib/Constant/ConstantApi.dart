@@ -18,6 +18,7 @@ String c_txtceritasample = "";
 String c_txtceritafull = "";
 String c_statuscerita = "";
 String c_kodeuser = "";
+String c_ceritacreated = "";
 
 // Kategori
 String ka_id = "";

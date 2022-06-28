@@ -1,24 +1,53 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import '../Constant/ConstantApi.dart';
+import '../HomePage.dart';
 
 class CallApi{
-  Future postData(data, apiUrl, BuildContext context) async{
+  Future postDataRegistrasi(data, apiUrl, BuildContext context) async{
     try{
       http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
       print(hasilRespons.statusCode);
       print(hasilRespons.body);
       if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Registrasi berhasil"))
-        );
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Registrasi Berhasil',
+          desc: 'Silahkan melakukan login untuk masuk.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+
         return true;
       } else {
+        // var jsonResponse = (jsonDecode(hasilRespons.body) as Map<String, dynamic>);
+        // print(jsonResponse['messages']["username"]);
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Registrasi Gagal',
+          desc: 'Silahkan periksa isian registrasi.',
+          btnOkOnPress: () {},
+          btnOkIcon: Icons.cancel,
+          btnOkColor: Colors.red
+        ).show();
         return false;
       }
     } on Exception catch(e){
       print(e.toString());
     }
   }
+
 }

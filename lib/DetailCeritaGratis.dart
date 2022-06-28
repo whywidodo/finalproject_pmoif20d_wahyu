@@ -1,3 +1,6 @@
+import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
+import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
+import 'package:finalproject_pmoif20d_wahyu/SampleBacaanGratis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -57,9 +60,9 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(0),
-                        child: const Text(
-                          'Malin Kundang',
-                          style: TextStyle(
+                        child: Text(
+                          c_judulcerita,
+                          style: const TextStyle(
                               fontSize: 16, fontFamily: 'PoppinsBlack'),
                         ),
                       ),
@@ -68,8 +71,8 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                           Column(
                             children: [
                               Text(
-                                'Autor Satu, Mei 2021',
-                                style: TextStyle(
+                                c_ceritacreated,
+                                style: const TextStyle(
                                     fontSize: 10,
                                     fontFamily: 'PoppinsMedium',
                                     color: Colors.grey),
@@ -114,7 +117,7 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                   decoration: BoxDecoration(
                       color: Colors.purple,
                       borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                         fit: BoxFit.fill,
                         image: AssetImage('assets/images/ceria256white.png'),
                       )),
@@ -126,18 +129,19 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Kategori',
-                          style: TextStyle(
-                              fontSize: 14, fontFamily: 'PoppinsBlack')),
-                      Text('Dongeng',
-                          style: TextStyle(
-                              fontSize: 12, fontFamily: 'PoppinsMedium')),
-                      Text('Ringkasan',
+                      const Text('Kategori',
                           style: TextStyle(
                               fontSize: 14, fontFamily: 'PoppinsBlack')),
                       Text(
-                          'Zaman dahulu kala ada sebuah cerita di sebuah perkampungan nelayan Pantai Air Manis di Padang, Sumatera Barat. Ada seorang janda bernama Mande Rubayah.',
+                          c_kodekategori,
+                          style: const TextStyle(
+                              fontSize: 12, fontFamily: 'PoppinsMedium')),
+                      const Text('Ringkasan',
                           style: TextStyle(
+                              fontSize: 14, fontFamily: 'PoppinsBlack')),
+                      Text(
+                          c_txtceritasample,
+                          style: const TextStyle(
                               fontSize: 12, fontFamily: 'PoppinsMedium'),
                           textAlign: TextAlign.justify),
                     ],
@@ -172,7 +176,12 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                   width: 25,
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SampleBacaanGratis()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(0),
                       minimumSize: const Size(140, 40),

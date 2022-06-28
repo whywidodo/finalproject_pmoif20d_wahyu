@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:finalproject_pmoif20d_wahyu/About.dart';
 import 'package:finalproject_pmoif20d_wahyu/CeritaFavorite.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
@@ -22,7 +23,8 @@ class HomePage extends StatefulWidget {
 
 int _selectedIndex = 0;
 
-class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends ResumableState<HomePage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var txtLoginEmail = TextEditingController();
   var txtLoginPassword = TextEditingController();
@@ -47,7 +49,6 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
   bool _isLoading = false;
 
   late TabController _tabController;
-
 
   @override
   void initState() {
@@ -83,209 +84,231 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
   Widget customTitle = const Text('Cerita Indonesia',
       style: TextStyle(fontFamily: 'PoppinsMedium'));
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Image.asset('assets/images/ceria256white.png')),
-          automaticallyImplyLeading: true,
-          centerTitle: true,
-          title: customTitle,
-          backgroundColor: const Color(0xFF6A2B84),
-          foregroundColor: Colors.white,
-          actions: [
-            IconButton(
-              onPressed: () {
-                _pencarian();
-              },
-              icon: customIcon,
+        length: 4,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Image.asset('assets/images/ceria256white.png')),
+            automaticallyImplyLeading: true,
+            centerTitle: true,
+            title: customTitle,
+            backgroundColor: const Color(0xFF6A2B84),
+            foregroundColor: Colors.white,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  _pencarian();
+                },
+                icon: customIcon,
+              ),
+            ],
+            bottom: TabBar(
+              controller: _tabController,
+              indicatorColor: Colors.white,
+              tabs: const [
+                Tab(
+                    child: Text('Dongeng',
+                        style: TextStyle(fontSize: 11, color: Colors.white))),
+                Tab(
+                    child: Text('Cerpen',
+                        style: TextStyle(fontSize: 11, color: Colors.white))),
+                Tab(
+                    child: Text('Novel',
+                        style: TextStyle(fontSize: 11, color: Colors.white))),
+                Tab(
+                    child: Text('Biografi',
+                        style: TextStyle(fontSize: 11, color: Colors.white))),
+              ],
             ),
-          ],
-
-          bottom: TabBar(
+            bottomOpacity: .7,
+          ),
+          body: TabBarView(
             controller: _tabController,
-            indicatorColor: Colors.white,
-            tabs: const [
-              Tab(child : Text('Dongeng', style: TextStyle(fontSize: 11, color: Colors.white))),
-              Tab(child : Text('Cerpen', style: TextStyle(fontSize: 11, color: Colors.white))),
-              Tab(child : Text('Novel', style: TextStyle(fontSize: 11, color: Colors.white))),
-              Tab(child : Text('Biografi', style: TextStyle(fontSize: 11, color: Colors.white))),
+            children: [
+              // Tab Bar Dongeng
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: widgetsDongeng.length,
+                    itemBuilder: (BuildContext ctx, int i) {
+                      return Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            InkResponse(
+                              child: Image.asset(
+                                  'assets/images/ceria256color.png',
+                                  height: 70,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover),
+                              onTap: () {
+                                print(i);
+                                c_kodecerita =
+                                    '${widgetsDongeng[i]["kode_cerita"]}';
+                                c_judulcerita =
+                                    '${widgetsDongeng[i]["judul_cerita"]}';
+                                c_kodekategori =
+                                    '${widgetsDongeng[i]["kode_kategori"]}';
+                                c_txtceritasample =
+                                    '${widgetsDongeng[i]["txt_cerita_sample"]}';
+                                c_txtceritafull =
+                                '${widgetsDongeng[i]["txt_cerita_sample"]}';
+                                c_ceritacreated =
+                                '${widgetsDongeng[i]["created_at"]["date"]}';
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            Text("${widgetsDongeng[i]["judul_cerita"]}",
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+
+              // Tab Bar Cerpen
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: widgetsCerpen.length,
+                    itemBuilder: (BuildContext ctx, int i) {
+                      return Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            InkResponse(
+                              child: Image.asset(
+                                  'assets/images/ceria256color.png',
+                                  height: 70,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover),
+                              onTap: () {
+                                print(i);
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            Text("${widgetsCerpen[i]["judul_cerita"]}",
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+
+              // Tab Bar Novel
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: widgetsNovel.length,
+                    itemBuilder: (BuildContext ctx, int i) {
+                      return Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            InkResponse(
+                              child: Image.asset(
+                                  'assets/images/ceria256color.png',
+                                  height: 70,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover),
+                              onTap: () {
+                                print(i);
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            Text("${widgetsNovel[i]["judul_cerita"]}",
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+
+              // Tab Bar Biografi
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: widgetsBiografi.length,
+                    itemBuilder: (BuildContext ctx, int i) {
+                      return Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            InkResponse(
+                              child: Image.asset(
+                                  'assets/images/ceria256color.png',
+                                  height: 70,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover),
+                              onTap: () {
+                                print(i);
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            Text("${widgetsBiografi[i]["judul_cerita"]}",
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
             ],
           ),
-
-          bottomOpacity: .7,
-        ),
-        body:
-        TabBarView(
-          controller: _tabController,
-          children: [
-            // Tab Bar Dongeng
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: widgetsDongeng.length,
-                  itemBuilder: (BuildContext ctx, int i) {
-                    return Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          InkResponse(
-                            child: Image.asset('assets/images/ceria256color.png',
-                                height: 70,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.cover),
-                            onTap: () {
-                              print(i);
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          Text("${widgetsDongeng[i]["judul_cerita"]}",
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-
-            // Tab Bar Cerpen
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: widgetsCerpen.length,
-                  itemBuilder: (BuildContext ctx, int i) {
-                    return Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          InkResponse(
-                            child: Image.asset('assets/images/ceria256color.png',
-                                height: 70,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.cover),
-                            onTap: () {
-                              print(i);
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          Text("${widgetsCerpen[i]["judul_cerita"]}",
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-
-            // Tab Bar Novel
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: widgetsNovel.length,
-                  itemBuilder: (BuildContext ctx, int i) {
-                    return Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          InkResponse(
-                            child: Image.asset('assets/images/ceria256color.png',
-                                height: 70,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.cover),
-                            onTap: () {
-                              print(i);
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          Text("${widgetsNovel[i]["judul_cerita"]}",
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-
-            // Tab Bar Biografi
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: widgetsBiografi.length,
-                  itemBuilder: (BuildContext ctx, int i) {
-                    return Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          InkResponse(
-                            child: Image.asset('assets/images/ceria256color.png',
-                                height: 70,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.cover),
-                            onTap: () {
-                              print(i);
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          Text("${widgetsBiografi[i]["judul_cerita"]}",
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-
-          ],
-        ),
-
-
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: const Color(0xFF6A2B84),
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Beranda"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.star_border), label: "Favorit"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.info_outline), label: "Tentang"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle_outlined), label: "Profil"),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-        ),
-      )
-    );
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: const Color(0xFF6A2B84),
+            unselectedItemColor: Colors.grey,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Beranda"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.star_border), label: "Favorit"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.info_outline), label: "Tentang"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.account_circle_outlined), label: "Profil"),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+          ),
+        ));
   }
 
   void _validateInputs() {
@@ -296,28 +319,29 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
   }
 
   void _validateRegister() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      doRegistrasi(
-        txtRegUser.text,
-        txtRegNama.text,
-        txtRegEmail.text,
-        txtRegPass1.text,
-        txtRegPass2.text
-      );
+    if (txtRegPass1.text == txtRegPass2.text) {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        doRegistrasi(txtRegUser.text, txtRegNama.text, txtRegEmail.text,
+            txtRegPass1.text, txtRegPass2.text);
+      }
+    } else {
+      showAlertGagalPassword();
     }
   }
 
   doLogin(String email, pass) async {
+    var bytes = utf8.encode(pass);
+    var digest = md5.convert(bytes);
+    String passHash = digest.toString();
+
     SharedPreferences pref = await SharedPreferences.getInstance();
-    Map data = {
-      'email': email,
-      'password': pass
-    };
-    var response = await http.post(Uri.parse(baseURL + 'api/login'), body: data);
-    if(response.statusCode == 200 || response.statusCode == 201) {
-      var jsonResponse = (jsonDecode(response.body) as Map<String,dynamic>);
-      if(jsonResponse["status"] == 200) {
+    Map data = {'email': email, 'password': passHash};
+    var response =
+        await http.post(Uri.parse(baseURL + 'api/login'), body: data);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonResponse = (jsonDecode(response.body) as Map<String, dynamic>);
+      if (jsonResponse["status"] == 200) {
         setState(() {
           _isLoading = false;
         });
@@ -325,23 +349,26 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
         await pref.setString("email", email);
         await pref.setBool("is_login", true);
         var emailku = pref.getString("email") as String;
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
+
+        u_email = pref.getString("email") as String;
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => User()));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
         // showAlertBerhasil();
-      }else if(jsonResponse["status"] == 500){
+      } else if (jsonResponse["status"] == 500) {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.ERROR,
           animType: AnimType.SCALE,
           headerAnimationLoop: true,
           title: 'Login Gagal',
-          desc:'Silahkan periksa email dan password Anda.',
+          desc: 'Silahkan periksa email dan password Anda.',
           btnOkOnPress: () {},
           btnOkIcon: Icons.cancel,
           btnOkColor: Colors.red,
         ).show();
       }
-    }
-    else {
+    } else {
       setState(() {
         _isLoading = false;
       });
@@ -351,14 +378,13 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
 
   doRegistrasi(username, namalengkap, email, password, password2) async {
     var data = {
-      'kode_user': "KU0002",
+      'kode_user': "KU0005",
       'email': email,
       'nama_lengkap': namalengkap,
       'username': username,
       'password': password,
     };
-    bool res = await CallApi().postData(data, 'users', context);
-    Navigator.pop(context);
+    bool res = await CallApi().postDataRegistrasi(data, 'users', context);
   }
 
   void checkLogin() async {
@@ -367,8 +393,9 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
     if (islogin != null && islogin) {
       var emailku = pref.getString("email") as String;
       // Navigator.pop(context);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
-    }else{
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
+    } else {
       showBottomSheetLogin();
     }
   }
@@ -427,7 +454,10 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
   void showHomePage() {
     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
 
-    Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (route) => false);
   }
 
   void showFavorite() {
@@ -446,8 +476,7 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
   }
 
   void showUser() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => User()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => User()));
   }
 
   void showBottomSheetLogin() {
@@ -766,7 +795,7 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0),
                           borderSide:
-                          const BorderSide(color: Color(0xFF6A2B84)),
+                              const BorderSide(color: Color(0xFF6A2B84)),
                         ),
                       ),
                       style: const TextStyle(
@@ -897,7 +926,7 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
     );
   }
 
-  void showAlertBerhasil(){
+  void showAlertSuksesLogin() {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.SUCCES,
@@ -911,6 +940,20 @@ class _HomePageState extends ResumableState<HomePage> with SingleTickerProviderS
       },
       btnOkIcon: Icons.cancel,
     ).show();
+  }
+
+  void showAlertGagalPassword() {
+    AwesomeDialog(
+            context: context,
+            dialogType: DialogType.ERROR,
+            animType: AnimType.SCALE,
+            headerAnimationLoop: true,
+            title: 'Registrasi Gagal',
+            desc: 'Masukkan password yang sama',
+            btnOkOnPress: () {},
+            btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.red)
+        .show();
   }
 
   void _pencarian() {
