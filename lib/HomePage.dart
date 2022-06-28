@@ -399,6 +399,27 @@ class _HomePageState extends ResumableState<HomePage>
       showBottomSheetLogin();
     }
   }
+  void checkLoginFavorite() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var islogin = pref.getBool("is_login");
+    if (islogin != null && islogin){
+      u_email = pref.getString("email") as String;
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => CeritaFavorite()));
+    }else{
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.WARNING,
+        animType: AnimType.SCALE,
+        headerAnimationLoop: true,
+        title: 'Login Terlebih Dahulu',
+        desc: 'Silahkan melakukan login untuk masuk.',
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.orange
+      ).show();
+    }
+  }
 
   Future<void> loadDataDongeng() async {
     var dataURL = Uri.parse(baseURL + 'cerita/Dongeng');
@@ -442,7 +463,7 @@ class _HomePageState extends ResumableState<HomePage>
     if (index == 0) {
       showHomePage();
     } else if (index == 1) {
-      showFavorite();
+      checkLoginFavorite();
     } else if (index == 2) {
       showAboutApp();
     } else if (index == 3) {

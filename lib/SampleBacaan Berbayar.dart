@@ -18,13 +18,6 @@ class _SampleBacaanBerbayarState extends State<SampleBacaanBerbayar> {
           style: TextStyle(fontFamily: 'PoppinsMedium'),
         ),
         backgroundColor: const Color(0xFF6A2B84),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-            },
-          )
-        ],
       ),
       body: ListView(scrollDirection: Axis.vertical,
       children: [
