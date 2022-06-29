@@ -7,6 +7,7 @@ import '../HomePage.dart';
 import '../User.dart';
 
 class CallApi{
+  // Proses Registrasi User atau Pengguna
   Future postDataRegistrasi(data, apiUrl, BuildContext context) async{
     try{
       http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
@@ -84,6 +85,36 @@ class CallApi{
             btnOkIcon: Icons.cancel,
             btnOkColor: Colors.red
         ).show();
+        return false;
+      }
+    } on Exception catch(e){
+      print(e.toString());
+    }
+  }
+
+  // Proses Untuk Menghapus Data Cerita
+  Future delDataCerita(data, apiUrl, BuildContext context) async{
+    print(apiUrl);
+    try{
+      http.Response hasilRespons = await http.get(Uri.parse(baseURL + apiUrl));
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 201 || hasilRespons.statusCode == 200) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Cerita berhasil dihapus.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => User()), (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      } else {
         return false;
       }
     } on Exception catch(e){

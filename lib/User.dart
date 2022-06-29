@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'EditCerita.dart';
 import 'TambahCerita.dart';
 import 'HomePage.dart';
+import './API/CallApi.dart';
 
 List<String> bank = ["Pilih Bank Tujuan", "BRI", "BNI", "BCA", "Mandiri"];
 String bankDipilih = "Pilih Bank Tujuan";
@@ -32,6 +33,7 @@ class _UserState extends State<User> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
+  double tinggiBox = 0;
   List widgetUsers = [];
   List widgetCeritaUsers = [];
   TextEditingController txtEditNamaLengkap = new TextEditingController();
@@ -229,9 +231,10 @@ class _UserState extends State<User> {
                     ),
                   )
                 ])),
+
         SizedBox(
           width: double.infinity,
-          height: 400.0,
+          height: tinggiBox,
           child: ListView.builder(
             itemCount: widgetCeritaUsers.length,
             itemBuilder: (context, index) {
@@ -239,7 +242,7 @@ class _UserState extends State<User> {
                   decoration: BoxDecoration(
                       color: const Color(0xFF9B5DB5),
                       borderRadius: BorderRadius.circular(8)),
-                  margin: const EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
                   padding: const EdgeInsets.only(left: 10),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -273,7 +276,7 @@ class _UserState extends State<User> {
                                 AwesomeDialog(
                                   context: context,
                                   dialogType: DialogType.QUESTION,
-                                  headerAnimationLoop: false,
+                                  headerAnimationLoop: true,
                                   animType: AnimType.SCALE,
                                   title: 'Hapus',
                                   desc:
@@ -284,7 +287,13 @@ class _UserState extends State<User> {
                                   btnOkText: "Ya",
                                   btnOkColor: const Color(0xFF6A2B84),
                                   btnCancelOnPress: () {},
-                                  btnOkOnPress: () {},
+                                  btnOkOnPress: () {
+                                    c_kodecerita =
+                                    '${widgetCeritaUsers[index]["id"]}';
+                                    c_judulcerita =
+                                    '${widgetCeritaUsers[index]["judul_cerita"]}';
+                                    hapusDataCeritaUsers(c_kodecerita, c_judulcerita);
+                                  },
                                 ).show();
                               },
                               icon: const Icon(
@@ -295,6 +304,19 @@ class _UserState extends State<User> {
                               tooltip: 'Hapus Cerita'),
                           IconButton(
                             onPressed: () {
+                              c_kodecerita =
+                              '${widgetCeritaUsers[index]["id"]}';
+                              c_judulcerita =
+                              '${widgetCeritaUsers[index]["judul_cerita"]}';
+                              c_kodekategori =
+                              '${widgetCeritaUsers[index]["kode_kategori"]}';
+                              c_txtceritasample =
+                              '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
+                              c_txtceritafull =
+                              '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
+                              c_ceritacreated =
+                              '${widgetCeritaUsers[index]["created_at"]["date"]}';
+
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -324,11 +346,24 @@ class _UserState extends State<User> {
     var dataURL = Uri.parse(baseURL + 'ceritakode/$u_email');
     http.Response response = await http.get(dataURL);
 
-    setState(() {
-      widgetCeritaUsers = jsonDecode(response.body);
-      print (widgetCeritaUsers.length);
-      print (widgetCeritaUsers);
-    });
+    if(response.statusCode == 400){
+      tinggiBox = 0;
+      widgetCeritaUsers.length = 0;
+    }else {
+      setState(() {
+        widgetCeritaUsers = jsonDecode(response.body);
+        print(widgetCeritaUsers.length);
+        print(widgetCeritaUsers);
+      });
+      tinggiBox = 400;
+    }
+  }
+
+  Future<void> hapusDataCeritaUsers(idcerita, judulcerita) async {
+    var dataCerita = {
+      'id': idcerita
+    };
+    var res = CallApi().delDataCerita(dataCerita, 'ceritahapus/'+idcerita, context);
   }
 
   Widget bottomSheet(context) {

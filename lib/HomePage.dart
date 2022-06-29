@@ -72,6 +72,9 @@ class _HomePageState extends ResumableState<HomePage>
   @override
   void onResume() {
     loadDataDongeng();
+    loadDataCerpen();
+    loadDataNovel();
+    loadDataBiografi();
   }
 
   @override
@@ -391,10 +394,9 @@ class _HomePageState extends ResumableState<HomePage>
     SharedPreferences pref = await SharedPreferences.getInstance();
     var islogin = pref.getBool("is_login");
     if (islogin != null && islogin) {
-      var emailku = pref.getString("email") as String;
-      // Navigator.pop(context);
+      u_email = pref.getString("email") as String;
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
+          .push(MaterialPageRoute(builder: (context) => User()));
     } else {
       showBottomSheetLogin();
     }
