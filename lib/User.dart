@@ -19,6 +19,7 @@ class User extends StatefulWidget {
   User({Key? key}) : super(key: key);
 
   String uEmail = "";
+
   User.withId(this.uEmail, {Key? key}) : super(key: key) {
     debugPrint(uEmail);
   }
@@ -32,285 +33,302 @@ class _UserState extends State<User> {
   final ImagePicker _picker = ImagePicker();
 
   List widgetUsers = [];
+  List widgetCeritaUsers = [];
+  TextEditingController txtEditNamaLengkap = new TextEditingController();
+  TextEditingController txtEditEmail = TextEditingController();
+  TextEditingController txtEditPassword = TextEditingController();
+  TextEditingController txtEditPasswordBaru1 = TextEditingController();
+  TextEditingController txtEditPasswordBaru2 = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     loadDataUsers();
+    loadDataCeritaUsers();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          },
+        ),
+        centerTitle: true,
+        title: const Text(
+          'User',
+          style: TextStyle(fontFamily: 'PoppinsMedium'),
+        ),
+        backgroundColor: const Color(0xFF6A2B84),
+        actions: [
+          IconButton(
+              onPressed: () {
+                AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.WARNING,
+                  headerAnimationLoop: false,
+                  animType: AnimType.SCALE,
+                  title: 'Logout',
+                  desc: 'Apakah Anda yakin akan keluar dari aplikasi?',
+                  buttonsTextStyle: const TextStyle(color: Colors.white),
+                  btnCancelText: "Tidak",
+                  btnOkText: "Ya",
+                  btnOkColor: const Color(0xFF6A2B84),
+                  btnCancelOnPress: () {},
+                  btnOkOnPress: () {
+                    logOut();
+                  },
+                ).show();
+              },
+              icon: const Icon(Icons.logout_rounded))
+        ],
+      ),
+      body: ListView(children: [
+        Container(
+            height: 250,
+            color: const Color(0xFF6A2B84),
+            padding: const EdgeInsets.all(3),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                        Container(
+                            child: Stack(
+                          children: [
+                            CircleAvatar(
+                                backgroundColor: Colors.white,
+                                backgroundImage: _imageFile == null
+                                    ? const AssetImage(
+                                            'assets/images/profile.png')
+                                        as ImageProvider
+                                    : FileImage(File(_imageFile!.path)),
+                                radius: 50),
+                            Positioned(
+                                bottom: 5.0,
+                                right: 0.0,
+                                child: InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: ((builder) =>
+                                            bottomSheet(context)),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      color: Color(0xFFc4aacf),
+                                      size: 25.0,
+                                    )))
+                          ],
+                        )),
+                        Container(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              u_namalengkap,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontFamily: 'PoppinsMedium'),
+                            ),
+                            Text(
+                              // widget.uEmail,
+                              '$u_email',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontFamily: 'PoppinsMedium'),
+                            ),
+                            const Text(
+                              'Rp 100.000,-',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontFamily: 'PoppinsMedium',
+                                  height: 3),
+                            )
+                          ],
+                        ))
+                      ])),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TambahCerita()));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(130, 30),
+                                maximumSize: const Size(130, 30),
+                                primary: Colors.white,
+                                onPrimary: const Color(0xFF6A2B84),
+                                onSurface: Colors.purple,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                                textStyle: const TextStyle(
+                                    fontFamily: 'PoppinsMedium', fontSize: 11)),
+                            icon: const Icon(
+                              Icons.list_alt_rounded,
+                              size: 15,
+                            ),
+                            label: const Text('Tambah Cerita')),
+                        ElevatedButton.icon(
+                            onPressed: () {
+                              showDialogKomisi(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(115, 30),
+                                maximumSize: const Size(115, 30),
+                                primary: Colors.white,
+                                onPrimary: const Color(0xFF6A2B84),
+                                onSurface: Colors.purple,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                                textStyle: const TextStyle(
+                                    fontFamily: 'PoppinsMedium', fontSize: 11)),
+                            icon: const Icon(
+                              Icons.credit_card_outlined,
+                              size: 15,
+                            ),
+                            label: const Text('Tarik Komisi')),
+                        ElevatedButton.icon(
+                            onPressed: () {
+                              showDialogUbah();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(100, 30),
+                                maximumSize: const Size(100, 30),
+                                primary: Colors.white,
+                                onPrimary: const Color(0xFF6A2B84),
+                                onSurface: Colors.purple,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                                textStyle: const TextStyle(
+                                    fontFamily: 'PoppinsMedium', fontSize: 11)),
+                            icon: const Icon(
+                              Icons.edit_outlined,
+                              size: 15,
+                            ),
+                            label: const Text('Edit Profil')),
+                      ],
+                    ),
+                  )
+                ])),
+        SizedBox(
+          width: double.infinity,
+          height: 400.0,
+          child: ListView.builder(
+            itemCount: widgetCeritaUsers.length,
+            itemBuilder: (context, index) {
+              return Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFF9B5DB5),
+                      borderRadius: BorderRadius.circular(8)),
+                  margin: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widgetCeritaUsers[index]["judul_cerita"],
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'PoppinsMedium',
+                              fontSize: 13),
+                        ),
+                        Container(
+                            child: Row(children: <Widget>[
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EditCerita()));
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: 15,
+                            ),
+                            tooltip: 'Edit Cerita',
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.QUESTION,
+                                  headerAnimationLoop: false,
+                                  animType: AnimType.SCALE,
+                                  title: 'Hapus',
+                                  desc:
+                                      'Apa anda yakin akan menghapus cerita ini?',
+                                  buttonsTextStyle:
+                                      const TextStyle(color: Colors.white),
+                                  btnCancelText: "Tidak",
+                                  btnOkText: "Ya",
+                                  btnOkColor: const Color(0xFF6A2B84),
+                                  btnCancelOnPress: () {},
+                                  btnOkOnPress: () {},
+                                ).show();
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                              tooltip: 'Hapus Cerita'),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DetailCeritaGratis()));
+                            },
+                            icon: const Icon(
+                              Icons.remove_red_eye_sharp,
+                              color: Colors.white,
+                              size: 15,
+                            ),
+                            tooltip: 'Lihat Detail Cerita',
+                          )
+                        ]))
+                      ]));
             },
           ),
-          centerTitle: true,
-          title: const Text(
-            'User',
-            style: TextStyle(fontFamily: 'PoppinsMedium'),
-          ),
-          backgroundColor: const Color(0xFF6A2B84),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  AwesomeDialog(
-                    context: context,
-                    dialogType: DialogType.WARNING,
-                    headerAnimationLoop: false,
-                    animType: AnimType.SCALE,
-                    title: 'Logout',
-                    desc: 'Apakah Anda yakin akan keluar dari aplikasi?',
-                    buttonsTextStyle: const TextStyle(color: Colors.white),
-                    btnCancelText: "Tidak",
-                    btnOkText: "Ya",
-                    btnOkColor: const Color(0xFF6A2B84),
-                    btnCancelOnPress: () {},
-                    btnOkOnPress: () {
-                      logOut();
-                    },
-                  ).show();
-                },
-                icon: const Icon(Icons.logout_rounded))
-          ],
         ),
-        body: ListView(children: [
-          Container(
-              height: 250,
-              color: const Color(0xFF6A2B84),
-              padding: const EdgeInsets.all(3),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                          Container(
-                              child: Stack(
-                            children: [
-                              CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  backgroundImage: _imageFile == null
-                                      ? const AssetImage(
-                                              'assets/images/profile.png')
-                                          as ImageProvider
-                                      : FileImage(File(_imageFile!.path)),
-                                  radius: 50),
-                              Positioned(
-                                  bottom: 5.0,
-                                  right: 0.0,
-                                  child: InkWell(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: ((builder) =>
-                                              bottomSheet(context)),
-                                        );
-                                      },
-                                      child: const Icon(
-                                        Icons.camera_alt,
-                                        color: Color(0xFFc4aacf),
-                                        size: 25.0,
-                                      )))
-                            ],
-                          )),
-                          Container(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                u_namalengkap,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontFamily: 'PoppinsMedium'),
-                              ),
-                              Text(
-                                // widget.uEmail,
-                                '$u_email',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontFamily: 'PoppinsMedium'),
-                              ),
-                              const Text(
-                                "Rp 100.000,-",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontFamily: 'PoppinsMedium',
-                                    height: 3),
-                              )
-                            ],
-                          ))
-                        ])),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const TambahCerita()));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(130, 30),
-                                  maximumSize: const Size(130, 30),
-                                  primary: Colors.white,
-                                  onPrimary: const Color(0xFF6A2B84),
-                                  onSurface: Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
-                                  textStyle: const TextStyle(
-                                      fontFamily: 'PoppinsMedium',
-                                      fontSize: 11)),
-                              icon: const Icon(
-                                Icons.list_alt_rounded,
-                                size: 15,
-                              ),
-                              label: const Text('Tambah Cerita')),
-                          ElevatedButton.icon(
-                              onPressed: () {
-                                showDialogKomisi(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(115, 30),
-                                  maximumSize: const Size(115, 30),
-                                  primary: Colors.white,
-                                  onPrimary: const Color(0xFF6A2B84),
-                                  onSurface: Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
-                                  textStyle: const TextStyle(
-                                      fontFamily: 'PoppinsMedium',
-                                      fontSize: 11)),
-                              icon: const Icon(
-                                Icons.credit_card_outlined,
-                                size: 15,
-                              ),
-                              label: const Text('Tarik Komisi')),
-                          ElevatedButton.icon(
-                              onPressed: () {
-                                showDialogUbah(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(100, 30),
-                                  maximumSize: const Size(100, 30),
-                                  primary: Colors.white,
-                                  onPrimary: const Color(0xFF6A2B84),
-                                  onSurface: Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
-                                  textStyle: const TextStyle(
-                                      fontFamily: 'PoppinsMedium',
-                                      fontSize: 11)),
-                              icon: const Icon(
-                                Icons.edit_outlined,
-                                size: 15,
-                              ),
-                              label: const Text('Edit Profil')),
-                        ],
-                      ),
-                    )
-                  ])),
-          Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Kontribusi Cerita Anda',
-                      style:
-                          TextStyle(fontFamily: 'PoppinsBlack', fontSize: 13),
-                    ),
-                    Container(
-                        decoration: BoxDecoration(
-                            color: const Color(0xFF9B5DB5),
-                            borderRadius: BorderRadius.circular(8)),
-                        margin: const EdgeInsets.only(top: 20),
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Cerita 1',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'PoppinsMedium',
-                                    fontSize: 13),
-                              ),
-                              Container(
-                                  child: Row(children: <Widget>[
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const EditCerita()));
-                                  },
-                                  icon: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                    size: 15,
-                                  ),
-                                  tooltip: 'Edit Cerita',
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      AwesomeDialog(
-                                        context: context,
-                                        dialogType: DialogType.QUESTION,
-                                        headerAnimationLoop: false,
-                                        animType: AnimType.SCALE,
-                                        title: 'Hapus',
-                                        desc:
-                                            'Apa anda yakin akan menghapus cerita ini?',
-                                        buttonsTextStyle: const TextStyle(
-                                            color: Colors.white),
-                                        btnCancelText: "Tidak",
-                                        btnOkText: "Ya",
-                                        btnOkColor: const Color(0xFF6A2B84),
-                                        btnCancelOnPress: () {},
-                                        btnOkOnPress: () {},
-                                      ).show();
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                      size: 15,
-                                    ),
-                                    tooltip: 'Hapus Cerita'),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DetailCeritaGratis()));
-                                  },
-                                  icon: const Icon(
-                                    Icons.remove_red_eye_sharp,
-                                    color: Colors.white,
-                                    size: 15,
-                                  ),
-                                  tooltip: 'Lihat Detail Cerita',
-                                )
-                              ]))
-                            ]))
-                  ]))
-        ]));
+        const SizedBox(
+          height: 20,
+        )
+      ]),
+    );
+  }
+
+  Future<void> loadDataCeritaUsers() async {
+    var dataURL = Uri.parse(baseURL + 'ceritakode/$u_email');
+    http.Response response = await http.get(dataURL);
+
+    setState(() {
+      widgetCeritaUsers = jsonDecode(response.body);
+      print (widgetCeritaUsers.length);
+      print (widgetCeritaUsers);
+    });
   }
 
   Widget bottomSheet(context) {
@@ -327,7 +345,7 @@ class _UserState extends State<User> {
                   fontSize: 20.0,
                   fontFamily: "PoppinsMedium",
                   color: Color(0xFF6A2B84))),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
@@ -400,7 +418,7 @@ class _UserState extends State<User> {
   }
 
   Future<void> loadDataUsers() async {
-    if('$u_email' != ""){
+    if ('$u_email' != "") {
       var dataURL = Uri.parse(baseURL + 'users/$u_email');
       http.Response response = await http.get(dataURL);
 
@@ -414,145 +432,186 @@ class _UserState extends State<User> {
     }
   }
 
-}
+  void showExitConfirm() {}
 
-void showExitConfirm() {}
+  void showDialogUbah() {
+    txtEditNamaLengkap.text = u_namalengkap;
+    txtEditEmail.text = u_email;
+    txtEditPassword.text = "";
 
-void showDialogUbah(context) {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            children: <Widget>[
-              Padding(
-                  padding: const EdgeInsets.only(left: 25.0, right: 10.0),
-                  child: Row(
-                    children: <Widget>[
-                      const Expanded(
-                        child: Text(
-                          "Edit Profil",
-                          style: TextStyle(
-                              fontSize: 18, fontFamily: 'PoppinsMedium'),
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              children: <Widget>[
+                Padding(
+                    padding: const EdgeInsets.only(left: 25.0, right: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        const Expanded(
+                          child: Text(
+                            "Edit Profil",
+                            style: TextStyle(
+                                fontSize: 18, fontFamily: 'PoppinsMedium'),
+                          ),
                         ),
-                      ),
-                      IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          })
-                    ],
-                  )),
-              Padding(
-                  padding: MediaQuery.of(context).viewInsets,
-                  child: Wrap(children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 5, bottom: 5),
-                      child: const TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          labelText: 'Nama Lengkap',
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(10),
-                        ),
-                      ),
-                    ),
-                    Container(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 5),
-                        child: const TextField(
-                            decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          labelText: 'Email',
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(10),
-                        ))),
-                    Container(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 5),
-                        child: const TextField(
-                            obscureText: true,
-                            obscuringCharacter: "*",
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              labelText: 'Password',
-                              isDense: true,
-                              contentPadding: EdgeInsets.all(10),
-                            ))),
-                    const Divider(indent: 20, endIndent: 20),
-                    Container(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: const Text(
-                        '*Abaikan jika tidak mengganti password',
-                        style: TextStyle(
-                            fontFamily: 'PoppinsItalic',
-                            fontSize: 8,
-                            color: Color(0xFF6A2B84)),
-                      ),
-                    ),
-                    Container(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 5),
-                        child: const TextField(
-                            obscureText: true,
-                            obscuringCharacter: "*",
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              labelText: 'Password Baru',
-                              isDense: true,
-                              contentPadding: EdgeInsets.all(10),
-                            ))),
-                    Container(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 5),
-                        child: const TextField(
-                            obscureText: true,
-                            obscuringCharacter: "*",
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              labelText: 'Ulangi Password Baru',
-                              isDense: true,
-                              contentPadding: EdgeInsets.all(10),
-                            ))),
-                    Container(
-                        margin: const EdgeInsets.all(25),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: const Color(0xFF6A2B84),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                        IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            })
+                      ],
+                    )),
+                Padding(
+                    padding: MediaQuery.of(context).viewInsets,
+                    child: Wrap(children: <Widget>[
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
+                              controller: txtEditNamaLengkap,
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Nama Lengkap',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
                                   ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Simpan",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'PoppinsMedium',
-                                        color: Color(0xffffffff),
-                                      ))),
-                            )
-                          ],
-                        ))
-                  ]))
-            ]);
-      });
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
+                              initialValue: u_email,
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Email',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
+                              controller: txtEditPassword,
+                              obscureText: true,
+                              obscuringCharacter: "*",
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Password',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      const Divider(indent: 20, endIndent: 20),
+                      Container(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: const Text(
+                          '*Abaikan jika tidak mengganti password',
+                          style: TextStyle(
+                              fontFamily: 'PoppinsItalic',
+                              fontSize: 8,
+                              color: Color(0xFF6A2B84)),
+                        ),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
+                              controller: txtEditPasswordBaru1,
+                              obscureText: true,
+                              obscuringCharacter: "*",
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Password Baru',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
+                              controller: txtEditPasswordBaru2,
+                              obscureText: true,
+                              obscuringCharacter: "*",
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Ulangi Password',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      Container(
+                          margin: const EdgeInsets.all(25),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: const Color(0xFF6A2B84),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Simpan",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: 'PoppinsMedium',
+                                          color: Color(0xffffffff),
+                                        ))),
+                              )
+                            ],
+                          ))
+                    ]))
+              ]);
+        });
+  }
 }
 
 void showDialogKomisi(context) {
