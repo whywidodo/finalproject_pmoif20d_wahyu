@@ -282,11 +282,6 @@ class _UserState extends ResumableState<User> {
                                   MaterialPageRoute(
                                       builder: (context) => const EditCerita()),
                                   (route) => false);
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             const EditCerita()));
                             },
                             icon: const Icon(
                               Icons.edit,
@@ -338,7 +333,7 @@ class _UserState extends ResumableState<User> {
                               c_txtceritasample =
                                   '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
                               c_txtceritafull =
-                                  '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
+                                  '${widgetCeritaUsers[index]["txt_cerita_full"]}';
                               c_statuscerita =
                                   '${widgetCeritaUsers[index]["status_cerita"]}';
                               c_ceritacreated =
@@ -496,7 +491,7 @@ class _UserState extends ResumableState<User> {
   void showExitConfirm() {}
 
   void showDialogUbah() {
-    print(txtPasswordLogin);
+    // print(txtPasswordLogin);
     txtEditNamaLengkap.text = u_namalengkap;
     txtEditEmail.text = u_email;
     txtEditUsername.text = u_username;
@@ -536,6 +531,27 @@ class _UserState extends ResumableState<User> {
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 5, bottom: 5),
                           child: TextFormField(
+                              readOnly: true,
+                              controller: txtEditEmail,
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Email',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
                               controller: txtEditNamaLengkap,
                               decoration: const InputDecoration(
                                   isDense: true,
@@ -557,26 +573,6 @@ class _UserState extends ResumableState<User> {
                               left: 20, right: 20, top: 5, bottom: 5),
                           child: TextFormField(
                               controller: txtEditUsername,
-                              decoration: const InputDecoration(
-                                  isDense: true,
-                                  hintText: 'Email',
-                                  contentPadding: EdgeInsets.all(14),
-                                  fillColor: Colors.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFF6A2B84), width: 1.2),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF6A2B84)),
-                                  )),
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.black54))),
-                      Container(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 5, bottom: 5),
-                          child: TextFormField(
-                              controller: txtEditEmail,
                               decoration: const InputDecoration(
                                   isDense: true,
                                   hintText: 'Email',
@@ -709,28 +705,24 @@ class _UserState extends ResumableState<User> {
         // Tidak merubah password
         doEditProfil(txtEditNamaLengkap.text, txtEditUsername.text,
             txtEditEmail.text, txtEditPassword.text);
-        // print("Proses edit profil tanpa rubah password berjalan.");
       } else {
         // Password baru ada nilainya
         if (txtEditPasswordBaru1.text == txtEditPasswordBaru2.text) {
           // Password baru keduanya sama
-          // doEditProfilPassword();
-          print("Proses edit profil dengan rubah password berjalan.");
-          print(txtEditPasswordBaru1.text);
-          print(txtEditPasswordBaru2.text);
+          doEditProfil(txtEditNamaLengkap.text, txtEditUsername.text,
+              txtEditEmail.text, txtEditPasswordBaru1.text);
         } else {
           // Password baru keduanya tidak sama
           // Alert password baru harus sama
-          print("Edit profil dengan rubah password gagal.");
-          print(txtEditPasswordBaru1.text);
-          print(txtEditPasswordBaru2.text);
+          var pesanAlert = "Password baru tidak sama, silahkan ulangi password baru. ";
+          showAlertPassword(pesanAlert);
         }
       }
     } else {
       // Password tidak sama
       // Alert password utama harus sama
-      print("Proses edit profil tanpa rubah password gagal.");
-      print(txtEditPassword.text);
+      var pesanAlert = "Masukkan password utama untuk menyimpan perubahan. ";
+      showAlertPassword(pesanAlert);
     }
   }
 
@@ -743,6 +735,20 @@ class _UserState extends ResumableState<User> {
     };
     bool res =
         await CallApi().putDataEditUser(data, 'usersedit/$u_id', context);
+  }
+
+  showAlertPassword(pesanAlert){
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.SCALE,
+        headerAnimationLoop: true,
+        title: 'Registrasi Gagal',
+        desc: pesanAlert,
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red
+    ).show();
   }
 }
 

@@ -35,11 +35,8 @@ class _HomePageState extends ResumableState<HomePage>
   var txtRegPass2 = TextEditingController();
 
   final TextEditingController _searchQuery = TextEditingController();
-  // List<Model> _list;
-  // List<Model> _searchList = List();
 
   late bool _IsSearching;
-  // String _searchText = "";
 
   List widgetsDongeng = [];
   List widgetsCerpen = [];
@@ -156,19 +153,14 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
-                                print(i);
-                                c_kodecerita =
-                                    '${widgetsDongeng[i]["kode_cerita"]}';
-                                c_judulcerita =
-                                    '${widgetsDongeng[i]["judul_cerita"]}';
-                                c_kodekategori =
-                                    '${widgetsDongeng[i]["kode_kategori"]}';
-                                c_txtceritasample =
-                                    '${widgetsDongeng[i]["txt_cerita_sample"]}';
-                                c_txtceritafull =
-                                '${widgetsDongeng[i]["txt_cerita_sample"]}';
-                                c_ceritacreated =
-                                '${widgetsDongeng[i]["created_at"]["date"]}';
+                                c_kodecerita = '${widgetsDongeng[i]["kode_cerita"]}';
+                                c_judulcerita = '${widgetsDongeng[i]["judul_cerita"]}';
+                                c_kodekategori = '${widgetsDongeng[i]["kode_kategori"]}';
+                                c_sampulcerita = '${widgetsDongeng[i]["sampul_cerita"]}';
+                                c_txtceritasample = '${widgetsDongeng[i]["txt_cerita_sample"]}';
+                                c_txtceritafull = '${widgetsDongeng[i]["txt_cerita_full"]}';
+                                c_statuscerita = '${widgetsDongeng[i]["status_cerita"]}';
+                                c_ceritacreated = '${widgetsDongeng[i]["created_at"]["date"]}';
 
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
                               },
@@ -207,7 +199,16 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
-                                print(i);
+                                c_kodecerita = '${widgetsCerpen[i]["kode_cerita"]}';
+                                c_judulcerita = '${widgetsCerpen[i]["judul_cerita"]}';
+                                c_kodekategori = '${widgetsCerpen[i]["kode_kategori"]}';
+                                c_sampulcerita = '${widgetsCerpen[i]["sampul_cerita"]}';
+                                c_txtceritasample = '${widgetsCerpen[i]["txt_cerita_sample"]}';
+                                c_txtceritafull = '${widgetsCerpen[i]["txt_cerita_full"]}';
+                                c_statuscerita = '${widgetsCerpen[i]["status_cerita"]}';
+                                c_ceritacreated = '${widgetsCerpen[i]["created_at"]["date"]}';
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
                               },
                             ),
                             const SizedBox(height: 10),
@@ -244,7 +245,16 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
-                                print(i);
+                                c_kodecerita = '${widgetsNovel[i]["kode_cerita"]}';
+                                c_judulcerita = '${widgetsNovel[i]["judul_cerita"]}';
+                                c_kodekategori = '${widgetsNovel[i]["kode_kategori"]}';
+                                c_sampulcerita = '${widgetsNovel[i]["sampul_cerita"]}';
+                                c_txtceritasample = '${widgetsNovel[i]["txt_cerita_sample"]}';
+                                c_txtceritafull = '${widgetsNovel[i]["txt_cerita_full"]}';
+                                c_statuscerita = '${widgetsNovel[i]["status_cerita"]}';
+                                c_ceritacreated = '${widgetsNovel[i]["created_at"]["date"]}';
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
                               },
                             ),
                             const SizedBox(height: 10),
@@ -281,7 +291,16 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
-                                print(i);
+                                c_kodecerita = '${widgetsBiografi[i]["kode_cerita"]}';
+                                c_judulcerita = '${widgetsBiografi[i]["judul_cerita"]}';
+                                c_kodekategori = '${widgetsBiografi[i]["kode_kategori"]}';
+                                c_sampulcerita = '${widgetsBiografi[i]["sampul_cerita"]}';
+                                c_txtceritasample = '${widgetsBiografi[i]["txt_cerita_sample"]}';
+                                c_txtceritafull = '${widgetsBiografi[i]["txt_cerita_full"]}';
+                                c_statuscerita = '${widgetsBiografi[i]["status_cerita"]}';
+                                c_ceritacreated = '${widgetsBiografi[i]["created_at"]["date"]}';
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
                               },
                             ),
                             const SizedBox(height: 10),
@@ -352,14 +371,10 @@ class _HomePageState extends ResumableState<HomePage>
         await pref.setString("email", email);
         await pref.setString("password", passHash);
         await pref.setBool("is_login", true);
-        var emailku = pref.getString("email") as String;
 
         u_email = pref.getString("email") as String;
         u_password = pref.getString("password") as String;
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => User()));
-        // Navigator.of(context).push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
-        // showAlertBerhasil();
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => User()));
       } else if (jsonResponse["status"] == 500) {
         AwesomeDialog(
           context: context,
@@ -627,8 +642,6 @@ class _HomePageState extends ResumableState<HomePage>
                             ),
                           ),
                           onPressed: () {
-                            // Navigator.pop(context);
-                            // showUser();
                             _validateInputs();
                           },
                           child: const Text(
@@ -641,6 +654,7 @@ class _HomePageState extends ResumableState<HomePage>
                           ),
                         ),
                       ),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: TextButton(
                           style: TextButton.styleFrom(

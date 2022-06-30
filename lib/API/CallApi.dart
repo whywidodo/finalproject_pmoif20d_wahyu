@@ -31,15 +31,28 @@ class CallApi{
 
         return true;
       } else {
-        // var jsonResponse = (jsonDecode(hasilRespons.body) as Map<String, dynamic>);
-        // print(jsonResponse['messages']["username"]);
+        var jsonResponse = (jsonDecode(hasilRespons.body) as Map<String, dynamic>);
+        var pesanUsername = "The username field must contain a unique value.";
+        var pesanEmail = "The email field must contain a unique value.";
+        var respUsername = jsonResponse['messages']["username"];
+        var respEmail = jsonResponse['messages']["email"];
+        var pesanAlert = "";
+
+        if(pesanEmail == respEmail){
+          pesanAlert = "Email sudah digunakan, silahkan gunakan email lain.";
+        }else if(pesanUsername == respUsername){
+          pesanAlert = "Username sudah digunakan, silahkan gunakan username lain.";
+        }else{
+          pesanAlert = "Silahkan periksa kelengkapan registrasi.";
+        }
+
         AwesomeDialog(
           context: context,
           dialogType: DialogType.ERROR,
           animType: AnimType.SCALE,
           headerAnimationLoop: true,
           title: 'Registrasi Gagal',
-          desc: 'Silahkan periksa isian registrasi.',
+          desc: pesanAlert,
           btnOkOnPress: () {},
           btnOkIcon: Icons.cancel,
           btnOkColor: Colors.red
