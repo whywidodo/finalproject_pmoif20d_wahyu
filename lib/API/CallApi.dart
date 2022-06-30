@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../Constant/ConstantApi.dart';
 import '../HomePage.dart';
+import '../Logout.dart';
 import '../User.dart';
 
 class CallApi{
@@ -121,4 +122,40 @@ class CallApi{
       print(e.toString());
     }
   }
+
+  // Proses Merubah Data User
+  Future putDataEditUser(data, apiUrl, BuildContext context) async{
+    try {
+      http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body: data);
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Silahkan login kembali.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => const Logout()),
+                    (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      }else{
+        return false;
+      }
+    } on Exception catch (e){
+      print(e.toString());
+    }
+  }
+
+  _setHeaders() => {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
 }

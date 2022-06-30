@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
@@ -38,9 +39,12 @@ class _UserState extends State<User> {
   List widgetCeritaUsers = [];
   TextEditingController txtEditNamaLengkap = new TextEditingController();
   TextEditingController txtEditEmail = TextEditingController();
+  TextEditingController txtEditUsername = TextEditingController();
   TextEditingController txtEditPassword = TextEditingController();
   TextEditingController txtEditPasswordBaru1 = TextEditingController();
   TextEditingController txtEditPasswordBaru2 = TextEditingController();
+  var txtPasswordLogin = u_password;
+
 
   @override
   void initState() {
@@ -470,9 +474,13 @@ class _UserState extends State<User> {
   void showExitConfirm() {}
 
   void showDialogUbah() {
+    print(txtPasswordLogin);
     txtEditNamaLengkap.text = u_namalengkap;
     txtEditEmail.text = u_email;
+    txtEditUsername.text = u_username;
     txtEditPassword.text = "";
+    txtEditPasswordBaru1.text = "";
+    txtEditPasswordBaru2.text = "";
 
     showDialog(
         context: context,
@@ -526,7 +534,7 @@ class _UserState extends State<User> {
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 5, bottom: 5),
                           child: TextFormField(
-                              initialValue: u_email,
+                              controller: txtEditUsername,
                               decoration: const InputDecoration(
                                   isDense: true,
                                   hintText: 'Email',
@@ -539,6 +547,26 @@ class _UserState extends State<User> {
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Color(0xFF6A2B84)),
+                                  )),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.black54))),
+                      Container(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: TextFormField(
+                              controller: txtEditEmail,
+                              decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: 'Email',
+                                  contentPadding: EdgeInsets.all(14),
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFF6A2B84), width: 1.2),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: Color(0xFF6A2B84)),
                                   )),
                               style: const TextStyle(
                                   fontSize: 12.0, color: Colors.black54))),
@@ -632,7 +660,8 @@ class _UserState extends State<User> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      // Navigator.pop(context);
+                                      _validateEditProfil();
                                     },
                                     child: const Text("Simpan",
                                         style: TextStyle(
@@ -647,6 +676,52 @@ class _UserState extends State<User> {
               ]);
         });
   }
+
+  void _validateEditProfil() {
+    var bytes = utf8.encode(txtEditPassword.text);
+    var digest = md5.convert(bytes);
+    String passEdit = digest.toString();
+
+    if (passEdit == txtPasswordLogin) {
+      if(txtEditPasswordBaru1.text == "" && txtEditPasswordBaru2.text == ""){
+        // Tidak merubah password
+        doEditProfil(txtEditNamaLengkap.text, txtEditUsername.text, txtEditEmail.text, txtEditPassword.text);
+        // print("Proses edit profil tanpa rubah password berjalan.");
+      }else{
+        // Password baru ada nilainya
+        if(txtEditPasswordBaru1.text == txtEditPasswordBaru2.text){
+          // Password baru keduanya sama
+          // doEditProfilPassword();
+          print("Proses edit profil dengan rubah password berjalan.");
+          print(txtEditPasswordBaru1.text);
+          print(txtEditPasswordBaru2.text);
+        }else{
+          // Password baru keduanya tidak sama
+          // Alert password baru harus sama
+          print("Edit profil dengan rubah password gagal.");
+          print(txtEditPasswordBaru1.text);
+          print(txtEditPasswordBaru2.text);
+        }
+      }
+
+    } else {
+      // Password tidak sama
+      // Alert password utama harus sama
+      print("Proses edit profil tanpa rubah password gagal.");
+      print(txtEditPassword.text);
+    }
+  }
+
+  doEditProfil(namalengkap, username, email, password) async {
+    var data = {
+      'username': username,
+      'nama_lengkap': namalengkap,
+      // 'email': email,
+      'password': password,
+    };
+    bool res = await CallApi().putDataEditUser(data, 'usersedit/$u_id', context);
+  }
+
 }
 
 void showDialogKomisi(context) {

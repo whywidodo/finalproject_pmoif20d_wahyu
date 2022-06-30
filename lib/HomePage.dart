@@ -350,10 +350,12 @@ class _HomePageState extends ResumableState<HomePage>
         });
         await pref.setString("token", jsonResponse["data"]["token"]);
         await pref.setString("email", email);
+        await pref.setString("password", passHash);
         await pref.setBool("is_login", true);
         var emailku = pref.getString("email") as String;
 
         u_email = pref.getString("email") as String;
+        u_password = pref.getString("password") as String;
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => User()));
         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
@@ -395,6 +397,7 @@ class _HomePageState extends ResumableState<HomePage>
     var islogin = pref.getBool("is_login");
     if (islogin != null && islogin) {
       u_email = pref.getString("email") as String;
+      u_password = pref.getString("password") as String;
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => User()));
     } else {
