@@ -1,10 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/TambahCerita.dart';
+import 'package:finalproject_pmoif20d_wahyu/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'API/CallApi.dart';
 import 'User.dart';
 
@@ -15,8 +15,11 @@ List<String> cerita = [
   "Cerpen",
   "Biografi"
 ];
-
-List<String> status = ["Pilih Status Cerita", "Gratis", "Berbayar"];
+List<String> status = [
+  "Pilih Status Cerita",
+  "Gratis",
+  "Berbayar"
+];
 
 class EditCerita extends StatefulWidget {
   const EditCerita({Key? key}) : super(key: key);
@@ -281,9 +284,9 @@ class _EditCeritaState extends State<EditCerita> {
   }
 
   void _validateProses() {
-    if (ceritaDipilih != 'Pilih Kategori Cerita') {
+    if (ceritaDipilih != 'Pilih Kategori Cerita' && statusDipilih != 'Pilih Status Cerita') {
       lakukanProses(txtEditJudulCerita.text, ceritaDipilih,
-          txtEditRingkasan.text, txtEditIsiCerita.text);
+          txtEditRingkasan.text, txtEditIsiCerita.text, statusDipilih);
     } else {
       AwesomeDialog(
               context: context,
@@ -291,7 +294,7 @@ class _EditCeritaState extends State<EditCerita> {
               animType: AnimType.SCALE,
               headerAnimationLoop: true,
               title: 'Edit Cerita Gagal',
-              desc: 'Silahkan pilih kategori cerita',
+              desc: 'Silahkan pilih kategori atau status cerita',
               btnOkOnPress: () {},
               btnOkIcon: Icons.cancel,
               btnOkColor: Colors.red)
@@ -299,14 +302,14 @@ class _EditCeritaState extends State<EditCerita> {
     }
   }
 
-  lakukanProses(judulCerita, kategoriCerita, ringkasanCerita, isiCerita) async {
+  lakukanProses(judulCerita, kategoriCerita, ringkasanCerita, isiCerita, statusCerita) async {
     var data = {
       "judul_cerita": judulCerita,
       "kode_kategori": kategoriCerita,
       "txt_cerita_sample": ringkasanCerita,
       "txt_cerita_full": isiCerita,
       "sampul_cerita": "null",
-      "status_cerita": "null",
+      "status_cerita": statusCerita,
       "kode_user": u_email
     };
     bool res =

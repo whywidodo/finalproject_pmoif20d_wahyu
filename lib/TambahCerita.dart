@@ -284,7 +284,7 @@ class _TambahCeritaState extends State<TambahCerita> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         lakukanProses(
-            txtCeritaJudul.text, txtCeritaSample.text, txtCeritaIsi.text);
+            txtCeritaJudul.text, ceritaDipilih, txtCeritaSample.text, txtCeritaIsi.text, statusDipilih);
       } else {
         // showAlertGagalTambah();
       }
@@ -303,14 +303,14 @@ class _TambahCeritaState extends State<TambahCerita> {
     }
   }
 
-  lakukanProses(judulCerita, ringkasanCerita, isiCerita) async {
+  lakukanProses(judulCerita, kategoriCerita, ringkasanCerita, isiCerita, statusCerita) async {
     var data = {
       "judul_cerita": judulCerita,
-      "kode_kategori": ceritaDipilih,
+      "kode_kategori": kategoriCerita,
       "txt_cerita_sample": ringkasanCerita,
       "txt_cerita_full": isiCerita,
       "sampul_cerita": "null",
-      "status_cerita": statusDipilih,
+      "status_cerita": statusCerita,
       "kode_user": u_email
     };
     print(data);

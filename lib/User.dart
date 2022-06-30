@@ -339,6 +339,8 @@ class _UserState extends ResumableState<User> {
                                   '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
                               c_txtceritafull =
                                   '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
+                              c_statuscerita =
+                                  '${widgetCeritaUsers[index]["status_cerita"]}';
                               c_ceritacreated =
                                   '${widgetCeritaUsers[index]["created_at"]["date"]}';
 
