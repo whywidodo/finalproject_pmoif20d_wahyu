@@ -31,6 +31,12 @@ class _TambahCeritaState extends State<TambahCerita> {
   var txtCeritaIsi = TextEditingController();
   var txtCeritaSample = TextEditingController();
 
+  void initState() {
+    super.initState();
+    ceritaDipilih = 'Pilih Kategori Cerita';
+    statusDipilih = 'Pilih Status Cerita';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
