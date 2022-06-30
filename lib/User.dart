@@ -7,6 +7,7 @@ import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:need_resume/need_resume.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'EditCerita.dart';
@@ -30,7 +31,7 @@ class User extends StatefulWidget {
   _UserState createState() => _UserState();
 }
 
-class _UserState extends State<User> {
+class _UserState extends ResumableState<User> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
@@ -45,11 +46,15 @@ class _UserState extends State<User> {
   TextEditingController txtEditPasswordBaru2 = TextEditingController();
   var txtPasswordLogin = u_password;
 
-
   @override
   void initState() {
     super.initState();
     loadDataUsers();
+    loadDataCeritaUsers();
+  }
+
+  @override
+  void onResume() {
     loadDataCeritaUsers();
   }
 
@@ -235,7 +240,6 @@ class _UserState extends State<User> {
                     ),
                   )
                 ])),
-
         SizedBox(
           width: double.infinity,
           height: tinggiBox,
@@ -262,11 +266,27 @@ class _UserState extends State<User> {
                             child: Row(children: <Widget>[
                           IconButton(
                             onPressed: () {
-                              Navigator.push(
+                              c_id = widgetCeritaUsers[index]["id"];
+                              c_judulcerita =
+                                  widgetCeritaUsers[index]["judul_cerita"];
+                              c_kodekategori =
+                                  widgetCeritaUsers[index]["kode_kategori"];
+                              c_txtceritasample =
+                                  widgetCeritaUsers[index]["txt_cerita_sample"];
+                              c_txtceritafull =
+                                  widgetCeritaUsers[index]["txt_cerita_full"];
+                              c_statuscerita =
+                                  widgetCeritaUsers[index]["status_cerita"];
+                              Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditCerita()));
+                                      builder: (context) => const EditCerita()),
+                                  (route) => false);
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             const EditCerita()));
                             },
                             icon: const Icon(
                               Icons.edit,
@@ -293,10 +313,11 @@ class _UserState extends State<User> {
                                   btnCancelOnPress: () {},
                                   btnOkOnPress: () {
                                     c_kodecerita =
-                                    '${widgetCeritaUsers[index]["id"]}';
+                                        '${widgetCeritaUsers[index]["id"]}';
                                     c_judulcerita =
-                                    '${widgetCeritaUsers[index]["judul_cerita"]}';
-                                    hapusDataCeritaUsers(c_kodecerita, c_judulcerita);
+                                        '${widgetCeritaUsers[index]["judul_cerita"]}';
+                                    hapusDataCeritaUsers(
+                                        c_kodecerita, c_judulcerita);
                                   },
                                 ).show();
                               },
@@ -309,17 +330,17 @@ class _UserState extends State<User> {
                           IconButton(
                             onPressed: () {
                               c_kodecerita =
-                              '${widgetCeritaUsers[index]["id"]}';
+                                  '${widgetCeritaUsers[index]["id"]}';
                               c_judulcerita =
-                              '${widgetCeritaUsers[index]["judul_cerita"]}';
+                                  '${widgetCeritaUsers[index]["judul_cerita"]}';
                               c_kodekategori =
-                              '${widgetCeritaUsers[index]["kode_kategori"]}';
+                                  '${widgetCeritaUsers[index]["kode_kategori"]}';
                               c_txtceritasample =
-                              '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
+                                  '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
                               c_txtceritafull =
-                              '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
+                                  '${widgetCeritaUsers[index]["txt_cerita_sample"]}';
                               c_ceritacreated =
-                              '${widgetCeritaUsers[index]["created_at"]["date"]}';
+                                  '${widgetCeritaUsers[index]["created_at"]["date"]}';
 
                               Navigator.push(
                                   context,
@@ -350,24 +371,23 @@ class _UserState extends State<User> {
     var dataURL = Uri.parse(baseURL + 'ceritakode/$u_email');
     http.Response response = await http.get(dataURL);
 
-    if(response.statusCode == 400){
+    if (response.statusCode == 400) {
       tinggiBox = 0;
       widgetCeritaUsers.length = 0;
-    }else {
+    } else {
       setState(() {
         widgetCeritaUsers = jsonDecode(response.body);
-        print(widgetCeritaUsers.length);
-        print(widgetCeritaUsers);
+        // print(widgetCeritaUsers.length);
+        // print(widgetCeritaUsers);
       });
       tinggiBox = 400;
     }
   }
 
   Future<void> hapusDataCeritaUsers(idcerita, judulcerita) async {
-    var dataCerita = {
-      'id': idcerita
-    };
-    var res = CallApi().delDataCerita(dataCerita, 'ceritahapus/'+idcerita, context);
+    var dataCerita = {'id': idcerita};
+    var res =
+        CallApi().delDataCerita(dataCerita, 'ceritahapus/' + idcerita, context);
   }
 
   Widget bottomSheet(context) {
@@ -566,7 +586,7 @@ class _UserState extends State<User> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                    BorderSide(color: Color(0xFF6A2B84)),
+                                        BorderSide(color: Color(0xFF6A2B84)),
                                   )),
                               style: const TextStyle(
                                   fontSize: 12.0, color: Colors.black54))),
@@ -683,19 +703,20 @@ class _UserState extends State<User> {
     String passEdit = digest.toString();
 
     if (passEdit == txtPasswordLogin) {
-      if(txtEditPasswordBaru1.text == "" && txtEditPasswordBaru2.text == ""){
+      if (txtEditPasswordBaru1.text == "" && txtEditPasswordBaru2.text == "") {
         // Tidak merubah password
-        doEditProfil(txtEditNamaLengkap.text, txtEditUsername.text, txtEditEmail.text, txtEditPassword.text);
+        doEditProfil(txtEditNamaLengkap.text, txtEditUsername.text,
+            txtEditEmail.text, txtEditPassword.text);
         // print("Proses edit profil tanpa rubah password berjalan.");
-      }else{
+      } else {
         // Password baru ada nilainya
-        if(txtEditPasswordBaru1.text == txtEditPasswordBaru2.text){
+        if (txtEditPasswordBaru1.text == txtEditPasswordBaru2.text) {
           // Password baru keduanya sama
           // doEditProfilPassword();
           print("Proses edit profil dengan rubah password berjalan.");
           print(txtEditPasswordBaru1.text);
           print(txtEditPasswordBaru2.text);
-        }else{
+        } else {
           // Password baru keduanya tidak sama
           // Alert password baru harus sama
           print("Edit profil dengan rubah password gagal.");
@@ -703,7 +724,6 @@ class _UserState extends State<User> {
           print(txtEditPasswordBaru2.text);
         }
       }
-
     } else {
       // Password tidak sama
       // Alert password utama harus sama
@@ -719,9 +739,9 @@ class _UserState extends State<User> {
       // 'email': email,
       'password': password,
     };
-    bool res = await CallApi().putDataEditUser(data, 'usersedit/$u_id', context);
+    bool res =
+        await CallApi().putDataEditUser(data, 'usersedit/$u_id', context);
   }
-
 }
 
 void showDialogKomisi(context) {
@@ -740,7 +760,9 @@ void showDialogKomisi(context) {
                         child: Text(
                           "Tarik Komisi",
                           style: TextStyle(
-                              fontSize: 18, fontFamily: 'PoppinsMedium'),
+                              fontSize: 18,
+                              fontFamily: 'PoppinsMedium',
+                              color: Color(0xFF6A2B84)),
                         ),
                       ),
                       IconButton(
@@ -756,29 +778,42 @@ void showDialogKomisi(context) {
                     Container(
                       padding: const EdgeInsets.only(
                           left: 20, right: 20, top: 5, bottom: 5),
-                      child: const TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          labelText: 'Jumlah Penarikan',
-                          // isDense: true,
-                          contentPadding: EdgeInsets.all(10),
-                        ),
-                      ),
+                      child: TextFormField(
+                          decoration: const InputDecoration(
+                              isDense: true,
+                              labelText: 'Jumlah Penarikan',
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF6A2B84)),
+                              hintText: 'Jumlah Penarikan',
+                              contentPadding: EdgeInsets.all(14),
+                              fillColor: Colors.white,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color(0xFF6A2B84), width: 1.2),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFF6A2B84)),
+                              )),
+                          style: const TextStyle(
+                              fontSize: 12.0, color: Colors.black54)),
                     ),
                     Container(
                         padding: const EdgeInsets.only(
                             left: 20, right: 20, top: 5, bottom: 5),
                         child: DropdownButtonFormField(
                             decoration: const InputDecoration(
+                              fillColor: Colors.white,
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF6A2B84), width: 1.2)),
                               border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF6A2B84))),
                             ),
                             isDense: true,
                             itemHeight: null,
-                            hint: const Text("Pilih Bank Tujuan"),
+                            hint: const Text("Kategori Cerita"),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             value: bankDipilih,
                             items: bank.map((String value) {
@@ -786,33 +821,49 @@ void showDialogKomisi(context) {
                                   value: value, child: Text(value));
                             }).toList(),
                             onChanged: (String? value) {
-                              {
-                                bankDipilih = value!;
-                              }
+                              bankDipilih = value!;
                             }))
                   ])),
               Container(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 5, bottom: 5),
-                  child: const TextField(
-                      decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    labelText: 'Nama Pemilik Rekening',
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(10),
-                  ))),
+                  child: TextFormField(
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          labelText: 'Nama Pemilik Rekening',
+                          labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                          hintText: 'Nama Pemilik Rekening',
+                          contentPadding: EdgeInsets.all(14),
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFF6A2B84), width: 1.2),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF6A2B84)),
+                          )),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54))),
               Container(
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 5, bottom: 5),
-                  child: const TextField(
-                      decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    labelText: 'Nomor Rekening',
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(10),
-                  ))),
+                  child: TextFormField(
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          labelText: 'Nomor Rekening',
+                          labelStyle: const TextStyle(color: Color(0xFF6A2B84)),
+                          hintText: 'Nomor Rekening',
+                          contentPadding: EdgeInsets.all(14),
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFF6A2B84), width: 1.2),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF6A2B84)),
+                          )),
+                      style: const TextStyle(
+                          fontSize: 12.0, color: Colors.black54))),
               Container(
                   margin: const EdgeInsets.all(25),
                   child: Row(children: <Widget>[

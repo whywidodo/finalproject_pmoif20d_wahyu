@@ -9,6 +9,7 @@ String u_email = "";
 String u_password = "";
 
 // Cerita
+String statusDipilih = "Pilih Status Cerita";
 String ceritaDipilih = "Pilih Kategori Cerita";
 String c_id = "";
 String c_kodecerita = "";

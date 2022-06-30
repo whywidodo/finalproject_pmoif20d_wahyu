@@ -56,7 +56,8 @@ class CallApi{
       print(hasilRespons.statusCode);
       print(hasilRespons.body);
       if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
-        ceritaDipilih = "Pilih Kategori Cerita";
+        ceritaDipilih = "Pilih kategori cerita";
+        statusDipilih = "Pilih status cerita";
         AwesomeDialog(
           context: context,
           dialogType: DialogType.SUCCES,
@@ -142,6 +143,35 @@ class CallApi{
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) => const Logout()),
                     (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      }else{
+        return false;
+      }
+    } on Exception catch (e){
+      print(e.toString());
+    }
+  }
+
+  // Proses Merubah Data Cerita
+  Future putDataEditCerita(data, apiUrl, BuildContext context) async{
+    try {
+      http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body: data);
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Cerita berhasil diubah.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => User()));
           },
           btnOkIcon: Icons.cancel,
         ).show();

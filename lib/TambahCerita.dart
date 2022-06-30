@@ -2,7 +2,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import './API/CallApi.dart';
 import 'User.dart';
 
@@ -13,6 +12,11 @@ List<String> cerita = [
   "Cerpen",
   "Biografi"
 ];
+List<String> status = [
+  "Pilih Status Cerita",
+  "Gratis",
+  "Berbayar"
+];
 
 class TambahCerita extends StatefulWidget {
   const TambahCerita({Key? key}) : super(key: key);
@@ -22,7 +26,6 @@ class TambahCerita extends StatefulWidget {
 }
 
 class _TambahCeritaState extends State<TambahCerita> {
-  late final _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var txtCeritaJudul = TextEditingController();
   var txtCeritaIsi = TextEditingController();
@@ -187,6 +190,46 @@ class _TambahCeritaState extends State<TambahCerita> {
                                   fontSize: 12.0, color: Colors.black54))
                         ])),
                 Container(
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 5, bottom: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Status Cerita',
+                          style: TextStyle(
+                              color: Color(0xFF6A2B84),
+                              fontFamily: 'PoppinsMedium',
+                              fontSize: 12),
+                        ),
+                        DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                              fillColor: Colors.white,
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF6A2B84), width: 1.2)),
+                              border: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: Color(0xFF6A2B84))),
+                            ),
+                            isDense: true,
+                            itemHeight: null,
+                            hint: const Text("Pilih Status Cerita"),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            value: statusDipilih,
+                            items: status.map((String value) {
+                              return DropdownMenuItem(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                statusDipilih = value!;
+                              });
+                              {}
+                            })
+                      ],
+                    )),
+                Container(
                   margin:
                       EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
                   child: const Text(
@@ -237,7 +280,7 @@ class _TambahCeritaState extends State<TambahCerita> {
   }
 
   void _validateProses() {
-    if (ceritaDipilih != 'Pilih Kategori Cerita'){
+    if (ceritaDipilih != 'Pilih Kategori Cerita' && statusDipilih != 'Pilih Status Cerita'){
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         lakukanProses(
@@ -252,7 +295,7 @@ class _TambahCeritaState extends State<TambahCerita> {
           animType: AnimType.SCALE,
           headerAnimationLoop: true,
           title: 'Tambah Cerita Gagal',
-          desc: 'Silahkan pilih kategori cerita',
+          desc: 'Silahkan pilih kategori atau status cerita',
           btnOkOnPress: () {},
           btnOkIcon: Icons.cancel,
           btnOkColor: Colors.red
@@ -267,17 +310,10 @@ class _TambahCeritaState extends State<TambahCerita> {
       "txt_cerita_sample": ringkasanCerita,
       "txt_cerita_full": isiCerita,
       "sampul_cerita": "null",
-      "status_cerita": "null",
+      "status_cerita": statusDipilih,
       "kode_user": u_email
     };
     print(data);
     bool res = await CallApi().postDataTambahCerita(data, 'cerita', context);
   }
-
-//   Future _getImage() async{
-//     var image = await ImagePicker.pickImage (source: ImageSource.gallery);
-//     setState(() {
-//       _image = image;
-//     });
-//   }
 }
