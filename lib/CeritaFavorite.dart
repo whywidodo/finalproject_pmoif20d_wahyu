@@ -33,12 +33,6 @@ class _CeritaFavoriteState extends State<CeritaFavorite> {
             style: TextStyle(fontFamily: 'PoppinsMedium'),
           ),
           backgroundColor: const Color(0xFF6A2B84),
-          actions:[
-            IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {},
-            )
-          ],
         ),
         body: ListView(scrollDirection: Axis.vertical,
             children:[
@@ -74,7 +68,7 @@ class _CeritaFavoriteState extends State<CeritaFavorite> {
                                           padding:
                                           const EdgeInsets.only(right: 0, left: 0, top: 0, bottom: 40),
                                           height: 200,
-                                          width: 200,
+                                          width: 150,
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [

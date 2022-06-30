@@ -72,6 +72,9 @@ class _HomePageState extends ResumableState<HomePage>
   @override
   void onResume() {
     loadDataDongeng();
+    loadDataCerpen();
+    loadDataNovel();
+    loadDataBiografi();
   }
 
   @override
@@ -347,10 +350,12 @@ class _HomePageState extends ResumableState<HomePage>
         });
         await pref.setString("token", jsonResponse["data"]["token"]);
         await pref.setString("email", email);
+        await pref.setString("password", passHash);
         await pref.setBool("is_login", true);
         var emailku = pref.getString("email") as String;
 
         u_email = pref.getString("email") as String;
+        u_password = pref.getString("password") as String;
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => User()));
         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
@@ -391,12 +396,33 @@ class _HomePageState extends ResumableState<HomePage>
     SharedPreferences pref = await SharedPreferences.getInstance();
     var islogin = pref.getBool("is_login");
     if (islogin != null && islogin) {
-      var emailku = pref.getString("email") as String;
-      // Navigator.pop(context);
+      u_email = pref.getString("email") as String;
+      u_password = pref.getString("password") as String;
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => User.withId(emailku)));
+          .push(MaterialPageRoute(builder: (context) => User()));
     } else {
       showBottomSheetLogin();
+    }
+  }
+  void checkLoginFavorite() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var islogin = pref.getBool("is_login");
+    if (islogin != null && islogin){
+      u_email = pref.getString("email") as String;
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => CeritaFavorite()));
+    }else{
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.WARNING,
+        animType: AnimType.SCALE,
+        headerAnimationLoop: true,
+        title: 'Login Terlebih Dahulu',
+        desc: 'Silahkan melakukan login untuk masuk.',
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.orange
+      ).show();
     }
   }
 
@@ -442,7 +468,7 @@ class _HomePageState extends ResumableState<HomePage>
     if (index == 0) {
       showHomePage();
     } else if (index == 1) {
-      showFavorite();
+      checkLoginFavorite();
     } else if (index == 2) {
       showAboutApp();
     } else if (index == 3) {

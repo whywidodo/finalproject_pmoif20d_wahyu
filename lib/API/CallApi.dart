@@ -4,9 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../Constant/ConstantApi.dart';
 import '../HomePage.dart';
+import '../Logout.dart';
 import '../User.dart';
 
 class CallApi{
+  // Proses Registrasi User atau Pengguna
   Future postDataRegistrasi(data, apiUrl, BuildContext context) async{
     try{
       http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
@@ -90,4 +92,70 @@ class CallApi{
       print(e.toString());
     }
   }
+
+  // Proses Untuk Menghapus Data Cerita
+  Future delDataCerita(data, apiUrl, BuildContext context) async{
+    print(apiUrl);
+    try{
+      http.Response hasilRespons = await http.get(Uri.parse(baseURL + apiUrl));
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 201 || hasilRespons.statusCode == 200) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Cerita berhasil dihapus.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => User()), (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      } else {
+        return false;
+      }
+    } on Exception catch(e){
+      print(e.toString());
+    }
+  }
+
+  // Proses Merubah Data User
+  Future putDataEditUser(data, apiUrl, BuildContext context) async{
+    try {
+      http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body: data);
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Silahkan login kembali.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => const Logout()),
+                    (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      }else{
+        return false;
+      }
+    } on Exception catch (e){
+      print(e.toString());
+    }
+  }
+
+  _setHeaders() => {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
 }

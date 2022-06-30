@@ -1,6 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import './API/CallApi.dart';
 import 'User.dart';
 
@@ -12,7 +14,6 @@ List<String> cerita = [
   "Biografi"
 ];
 
-
 class TambahCerita extends StatefulWidget {
   const TambahCerita({Key? key}) : super(key: key);
 
@@ -21,6 +22,7 @@ class TambahCerita extends StatefulWidget {
 }
 
 class _TambahCeritaState extends State<TambahCerita> {
+  late final _image;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var txtCeritaJudul = TextEditingController();
   var txtCeritaIsi = TextEditingController();
@@ -201,7 +203,9 @@ class _TambahCeritaState extends State<TambahCerita> {
                       left: 20, right: 260, top: 5, bottom: 5),
                   color: const Color(0xFFc4aacf),
                   child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // _getImage;
+                      },
                       icon: const Icon(Icons.cloud_upload,
                           size: 30, color: Color(0xFF6A2B84))),
                 ),
@@ -233,26 +237,47 @@ class _TambahCeritaState extends State<TambahCerita> {
   }
 
   void _validateProses() {
-
+    if (ceritaDipilih != 'Pilih Kategori Cerita'){
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        lakukanProses(txtCeritaJudul.text, txtCeritaSample.text, txtCeritaIsi.text);
+        lakukanProses(
+            txtCeritaJudul.text, txtCeritaSample.text, txtCeritaIsi.text);
       } else {
         // showAlertGagalTambah();
       }
+    }else{
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Tambah Cerita Gagal',
+          desc: 'Silahkan pilih kategori cerita',
+          btnOkOnPress: () {},
+          btnOkIcon: Icons.cancel,
+          btnOkColor: Colors.red
+      ).show();
+    }
   }
 
   lakukanProses(judulCerita, ringkasanCerita, isiCerita) async {
-      var data = {
-        "judul_cerita": judulCerita,
-        "kode_kategori": ceritaDipilih,
-        "txt_cerita_sample" : ringkasanCerita,
-        "txt_cerita_full": isiCerita,
-        "sampul_cerita": "null",
-        "status_cerita": "null",
-        "kode_user": u_email
-      };
-      print(data);
-      bool res = await CallApi().postDataTambahCerita(data, 'cerita', context);
+    var data = {
+      "judul_cerita": judulCerita,
+      "kode_kategori": ceritaDipilih,
+      "txt_cerita_sample": ringkasanCerita,
+      "txt_cerita_full": isiCerita,
+      "sampul_cerita": "null",
+      "status_cerita": "null",
+      "kode_user": u_email
+    };
+    print(data);
+    bool res = await CallApi().postDataTambahCerita(data, 'cerita', context);
   }
+
+//   Future _getImage() async{
+//     var image = await ImagePicker.pickImage (source: ImageSource.gallery);
+//     setState(() {
+//       _image = image;
+//     });
+//   }
 }
