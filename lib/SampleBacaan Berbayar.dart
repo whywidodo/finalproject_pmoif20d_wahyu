@@ -1,5 +1,7 @@
+import 'package:finalproject_pmoif20d_wahyu/PembelianCerita.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SampleBacaanBerbayar extends StatefulWidget {
   const SampleBacaanBerbayar({Key? key}) : super(key: key);
@@ -8,6 +10,9 @@ class SampleBacaanBerbayar extends StatefulWidget {
   _SampleBacaanBerbayarState createState() => _SampleBacaanBerbayarState();
 }
 class _SampleBacaanBerbayarState extends State<SampleBacaanBerbayar> {
+  String text = 'Isi Text Sharing Ceritanya';
+  String sub = 'Subjek Cerita';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +26,7 @@ class _SampleBacaanBerbayarState extends State<SampleBacaanBerbayar> {
         actions: [
           IconButton(
             icon: Icon(Icons.share),
-            onPressed: () {
-            },
+            onPressed: text.isEmpty ? null : () => _onShare(context),
           )
         ],
       ),
@@ -63,35 +67,71 @@ class _SampleBacaanBerbayarState extends State<SampleBacaanBerbayar> {
             )
         ),
         Container(
-            padding: EdgeInsets.only(top: 10, bottom: 30, left: 40, right: 100),
-            alignment: Alignment.bottomRight,
-            child: Column(
-                children:[
-                  ElevatedButton.icon(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(140, 40),
-                          maximumSize: const Size(140, 40),
-                          primary: Colors.purple,
-                          onPrimary: Colors.white,
-                          onSurface: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50)
-                          ),
-                          textStyle: const TextStyle(
-                              fontFamily: 'PoppinsThin', fontSize: 13)
-                          ),
-                    icon: const Icon(
-                      Icons.shopping_cart,
-                      size: 18,
+            margin: const EdgeInsets.all(25),
+            child: Row(children: <Widget>[
+              Expanded(
+                child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color(0xffffffff),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                          side: const BorderSide(color: Color(0xFF6A2B84))
                       ),
-                    label: Text('Rp. 20.000,-'),
-                  )
-                ]
-            )
-        )
+                    ),
+                    onPressed: () {},
+                    child: const Text("Beli untuk cerita lengkap",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'PoppinsMedium',
+                          color: Color(
+                              0xFF6A2B84),
+                        ))),
+              ),
+              Expanded(
+                  child: Row(
+                    children: [
+                      ElevatedButton.icon(
+                          onPressed: () {Navigator.push(
+                              context,
+                            MaterialPageRoute(builder: (context) => PembelianCerita()),
+                          );},
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(140, 40),
+                              maximumSize: const Size(140, 40),
+                              primary: Colors.purple,
+                              onPrimary: Colors.white,
+                              onSurface: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)
+                              ),
+                              textStyle: const TextStyle(
+                                  fontFamily: 'PoppinsThin', fontSize: 12
+                              )
+                          ),
+                          icon: const Icon(
+                            Icons.shopping_cart,
+                            size: 18,
+                          ),
+                        label: Text('Rp. 20.000,-'),
+                      ),
+                      SizedBox(
+                        width: 25,
+                      )
+                    ],
+                  ) )
+            ])
+        ),
       ],)
     );
   }
+  void _onShare(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.share(
+        text,
+        subject: sub,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+  }
 }
+
+
 //NILA

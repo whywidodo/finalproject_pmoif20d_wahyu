@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SampleBacaanGratis extends StatefulWidget {
   const SampleBacaanGratis({Key? key}) : super(key: key);
@@ -8,6 +9,9 @@ class SampleBacaanGratis extends StatefulWidget {
   _SampleBacaanGratisState createState() => _SampleBacaanGratisState();
 }
 class _SampleBacaanGratisState extends State<SampleBacaanGratis> {
+  String text = 'Isi Text Sharing Ceritanya';
+  String sub = 'Subjek Cerita';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,8 +25,7 @@ class _SampleBacaanGratisState extends State<SampleBacaanGratis> {
         actions: [
           IconButton(
               icon: Icon(Icons.share),
-              onPressed: () {
-            },
+              onPressed: text.isEmpty ? null : () => _onShare(context),
           )
         ],
       ),
@@ -64,6 +67,13 @@ class _SampleBacaanGratisState extends State<SampleBacaanGratis> {
           ]
       )
     );
+  }
+  void _onShare(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.share(
+        text,
+        subject: sub,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 }
 //NILA
