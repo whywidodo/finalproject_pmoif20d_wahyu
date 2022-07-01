@@ -167,10 +167,9 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
                       textStyle: const TextStyle(
                           fontFamily: 'PoppinsThin', fontSize: 15)),
                   icon: const Icon(
-                    Icons.shopping_cart,
-                    size: 20,
+                   null,
                   ),
-                  label: Text('Gratis'),
+                  label: const Text('Gratis'),
                 ),
                 SizedBox(
                   width: 25,
