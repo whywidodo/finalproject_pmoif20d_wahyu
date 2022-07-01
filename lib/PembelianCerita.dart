@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
-class PembelianCerita extends StatefulWidget {
+List<String> metodePembayaran = [
+  "Metode Pembayaran",
+  "BRI",
+  "BNI",
+  "BCA",
+  "Alfamart"
+];
+String metodeDipilih = "Metode Pembayaran";
 
+class PembelianCerita extends StatefulWidget {
   const PembelianCerita({Key? key}) : super(key: key);
   @override
   _PembelianCeritaState createState() => _PembelianCeritaState();
 }
 
-
-
 class _PembelianCeritaState extends State<PembelianCerita> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -83,12 +88,32 @@ class _PembelianCeritaState extends State<PembelianCerita> {
                     ],
                   ),
                 ),
-                Container(
-
-                )
               ],
             ),
-          )
+          ),
+          Container(
+              padding:
+                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              child: DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF6A2B84), width: 1.2)),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF6A2B84))),
+                  ),
+                  isDense: true,
+                  itemHeight: null,
+                  hint: const Text("Metode Pembayaran"),
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  value: metodeDipilih,
+                  items: metodePembayaran.map((String value) {
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (String? value) {
+                    metodeDipilih = value!;
+                  })),
         ],
       ),
     );
