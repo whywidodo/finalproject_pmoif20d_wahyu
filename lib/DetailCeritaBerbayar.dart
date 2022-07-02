@@ -1,3 +1,5 @@
+import 'package:finalproject_pmoif20d_wahyu/PembelianCerita.dart';
+import 'package:finalproject_pmoif20d_wahyu/SampleBacaan%20Berbayar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -154,7 +156,9 @@ class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
             child: Row(
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => PembelianCerita()));
+                  },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(140, 40),
                       maximumSize: const Size(140, 40),
@@ -175,7 +179,13 @@ class _DetailCeritaBerbayarState extends State<DetailCeritaBerbayar> {
                   width: 25,
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SampleBacaanBerbayar()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(0),
                       minimumSize: const Size(140, 40),

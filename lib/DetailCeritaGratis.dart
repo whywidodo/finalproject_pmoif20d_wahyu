@@ -1,9 +1,13 @@
+import 'package:finalproject_pmoif20d_wahyu/BacaCerita.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/SampleBacaanGratis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+
+import 'PembelianCerita.dart';
+import 'SampleBacaan Berbayar.dart';
 
 class DetailCeritaGratis extends StatefulWidget {
   const DetailCeritaGratis({Key? key}) : super(key: key);
@@ -154,32 +158,25 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
             padding: EdgeInsets.only(top: 10,  left: 40),
             child: Row(
               children: [
-                ElevatedButton.icon(
-                  onPressed: null,
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(140, 40),
-                      maximumSize: const Size(140, 40),
-                      primary: Colors.grey,
-                      onPrimary: Colors.white,
-                      onSurface: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      textStyle: const TextStyle(
-                          fontFamily: 'PoppinsThin', fontSize: 15)),
-                  icon: const Icon(
-                   null,
-                  ),
-                  label: const Text('Gratis'),
-                ),
-                SizedBox(
+                tombolGratisBayar(),
+                const SizedBox(
                   width: 25,
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SampleBacaanGratis()),
-                    );
+                    if(c_statuscerita == "Gratis") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BacaCerita()),
+                      );
+                    }else{
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SampleBacaanBerbayar()),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(0),
@@ -284,5 +281,47 @@ class _DetailCeritaGratisState extends State<DetailCeritaGratis> {
       text,
       subject: sub,
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+  }
+
+  Widget tombolGratisBayar() {
+    if(c_statuscerita == "Gratis"){
+      return ElevatedButton(
+        onPressed: null,
+        style: ElevatedButton.styleFrom(
+            minimumSize: const Size(140, 40),
+            maximumSize: const Size(140, 40),
+            primary: Colors.grey,
+            onPrimary: Colors.white,
+            onSurface: Colors.black,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)),
+            textStyle: const TextStyle(
+                fontFamily: 'PoppinsThin', fontSize: 15)),
+        // icon: const Icon(null),
+        child: const Text('Gratis'),
+      );
+    }
+    else{
+      return ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(context,MaterialPageRoute(builder: (context) => PembelianCerita()));
+        },
+        style: ElevatedButton.styleFrom(
+            minimumSize: const Size(140, 40),
+            maximumSize: const Size(140, 40),
+            primary: Colors.purple,
+            onPrimary: Colors.white,
+            onSurface: Colors.black,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)),
+            textStyle: const TextStyle(
+                fontFamily: 'PoppinsThin', fontSize: 13)),
+        icon: const Icon(
+          Icons.shopping_cart,
+          size: 18,
+        ),
+        label: Text('Rp. 10.000,-'),
+      );
+    }
   }
 }
