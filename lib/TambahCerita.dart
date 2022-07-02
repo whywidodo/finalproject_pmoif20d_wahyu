@@ -28,7 +28,6 @@ class _TambahCeritaState extends State<TambahCerita> {
 
   void initState() {
     super.initState();
-    ceritaDipilih = 'Pilih Kategori Cerita';
     statusDipilih = "";
     loadDataKategori();
   }
@@ -77,7 +76,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Color(0xFF6A2B84)),
+                                    BorderSide(color: Color(0xFF6A2B84)),
                                   )),
                               style: const TextStyle(
                                   fontSize: 12.0, color: Colors.black54))
@@ -103,7 +102,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                                       color: Color(0xFF6A2B84), width: 1.2)),
                               border: OutlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: Color(0xFF6A2B84))),
+                                  BorderSide(color: Color(0xFF6A2B84))),
                             ),
                             isDense: true,
                             itemHeight: null,
@@ -153,42 +152,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Color(0xFF6A2B84)),
-                                  )),
-                              style: const TextStyle(
-                                  fontSize: 12.0, color: Colors.black54))
-                        ])),
-                Container(
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 5, bottom: 5),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Tulis Cerita',
-                            style: TextStyle(
-                                color: Color(0xFF6A2B84),
-                                fontFamily: 'PoppinsMedium',
-                                fontSize: 12),
-                          ),
-                          TextFormField(
-                              controller: txtCeritaIsi,
-                              textInputAction: TextInputAction.newline,
-                              keyboardType: TextInputType.multiline,
-                              minLines: null,
-                              maxLines: 5,
-                              decoration: const InputDecoration(
-                                  isDense: true,
-                                  hintText: 'Tuliskan cerita',
-                                  contentPadding: EdgeInsets.all(14),
-                                  fillColor: Colors.white,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFF6A2B84), width: 1.2),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF6A2B84)),
+                                    BorderSide(color: Color(0xFF6A2B84)),
                                   )),
                               style: const TextStyle(
                                   fontSize: 12.0, color: Colors.black54))
@@ -214,7 +178,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                                       color: Color(0xFF6A2B84), width: 1.2)),
                               border: OutlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: Color(0xFF6A2B84))),
+                                  BorderSide(color: Color(0xFF6A2B84))),
                             ),
                             isDense: true,
                             itemHeight: null,
@@ -235,7 +199,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                     )),
                 Container(
                   margin:
-                      EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+                  EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
                   child: const Text(
                     "Upload Sampul Cerita",
                     style: TextStyle(
@@ -294,11 +258,11 @@ class _TambahCeritaState extends State<TambahCerita> {
   }
 
   void _validateProses() {
-    if (kategori_value != null && ceritaDipilih !=null) {
+    if (kategori_value != null && statusDipilih !=null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         lakukanProses(txtCeritaJudul.text, kategori_value, txtCeritaSample.text,
-            txtCeritaIsi.text, statusDipilih);
+            "null", statusDipilih);
       } else {
         // showAlertGagalTambah();
       }
@@ -331,6 +295,4 @@ class _TambahCeritaState extends State<TambahCerita> {
     print(data);
     bool res = await CallApi().postDataTambahCerita(data, 'cerita', context);
   }
-
-
 }

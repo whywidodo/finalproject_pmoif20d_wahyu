@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/TambahCerita.dart';
@@ -8,18 +10,7 @@ import 'package:http/http.dart' as http;
 import 'API/CallApi.dart';
 import 'User.dart';
 
-List<String> cerita = [
-  "Pilih Kategori Cerita",
-  "Novel",
-  "Dongeng",
-  "Cerpen",
-  "Biografi"
-];
-List<String> status = [
-  "Pilih Status Cerita",
-  "Gratis",
-  "Berbayar"
-];
+List<String> status = ["Gratis", "Berbayar"];
 
 class EditCerita extends StatefulWidget {
   const EditCerita({Key? key}) : super(key: key);
@@ -33,13 +24,17 @@ class _EditCeritaState extends State<EditCerita> {
   TextEditingController txtEditRingkasan = new TextEditingController();
   TextEditingController txtEditIsiCerita = new TextEditingController();
 
+  List widgetKategori = [];
+  String kategori_value = "";
+
   @override
   void initState() {
     super.initState();
     txtEditJudulCerita.text = c_judulcerita;
     txtEditRingkasan.text = c_txtceritasample;
     txtEditIsiCerita.text = c_txtceritafull;
-    ceritaDipilih = c_kodekategori;
+    loadDataKategori();
+    kategori_value = c_kodekategori;
     statusDipilih = c_statuscerita;
   }
 
@@ -96,7 +91,7 @@ class _EditCeritaState extends State<EditCerita> {
                   ])),
           Container(
               padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -120,21 +115,23 @@ class _EditCeritaState extends State<EditCerita> {
                       itemHeight: null,
                       hint: const Text("Kategori Cerita"),
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      value: ceritaDipilih,
-                      items: cerita.map((String value) {
+                      value: kategori_value.isNotEmpty ? kategori_value : null,
+                      items: widgetKategori.map((item) {
                         return DropdownMenuItem(
-                            value: value, child: Text(value));
+                          value: item['nama_kategori'].toString(),
+                          child: Text(item['nama_kategori'].toString(), style: TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)),
+                        );
                       }).toList(),
-                      onChanged: (String? value) {
-                        {
-                          ceritaDipilih = value!;
-                        }
+                      onChanged: (Object? value) {
+                        setState(() {
+                          kategori_value = value.toString();
+                        });
                       })
                 ],
               )),
           Container(
               padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -166,48 +163,15 @@ class _EditCeritaState extends State<EditCerita> {
                         style: const TextStyle(
                             fontSize: 12.0, color: Colors.black54))
                   ])),
+
           Container(
               padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Tulis Cerita',
-                      style: TextStyle(
-                          color: Color(0xFF6A2B84),
-                          fontFamily: 'PoppinsMedium',
-                          fontSize: 12),
-                    ),
-                    TextFormField(
-                        textInputAction: TextInputAction.newline,
-                        keyboardType: TextInputType.multiline,
-                        minLines: null,
-                        maxLines: 5,
-                        controller: txtEditIsiCerita,
-                        decoration: const InputDecoration(
-                            isDense: true,
-                            hintText: 'Tuliskan cerita',
-                            contentPadding: EdgeInsets.all(14),
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFF6A2B84), width: 1.2),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF6A2B84)),
-                            )),
-                        style: const TextStyle(
-                            fontSize: 12.0, color: Colors.black54))
-                  ])),
-          Container(
-              padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Status Cerita',
+                    'Gratis atau Berbayar',
                     style: TextStyle(
                         color: Color(0xFF6A2B84),
                         fontFamily: 'PoppinsMedium',
@@ -224,12 +188,12 @@ class _EditCeritaState extends State<EditCerita> {
                       ),
                       isDense: true,
                       itemHeight: null,
-                      hint: const Text("Status Cerita"),
+                      hint: const Text("Gratis/Berbayar", style: TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)),
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      value: statusDipilih,
+                      value: statusDipilih.isNotEmpty ? statusDipilih : null,
                       items: status.map((String value) {
                         return DropdownMenuItem(
-                            value: value, child: Text(value));
+                            value: value, child: Text(value, style: const TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)));
                       }).toList(),
                       onChanged: (String? value) {
                         {
@@ -251,7 +215,7 @@ class _EditCeritaState extends State<EditCerita> {
           Container(
             height: 130,
             margin:
-                const EdgeInsets.only(left: 20, right: 260, top: 5, bottom: 5),
+            const EdgeInsets.only(left: 20, right: 260, top: 5, bottom: 5),
             color: const Color(0xFFc4aacf),
             child: IconButton(
                 onPressed: () {},
@@ -283,21 +247,30 @@ class _EditCeritaState extends State<EditCerita> {
         ]));
   }
 
+  Future<void> loadDataKategori() async {
+    var dataURL = Uri.parse(baseURL + 'kategori');
+    http.Response response = await http.get(dataURL);
+
+    setState(() {
+      widgetKategori = jsonDecode(response.body);
+    });
+  }
+
   void _validateProses() {
-    if (ceritaDipilih != 'Pilih Kategori Cerita' && statusDipilih != 'Pilih Status Cerita') {
-      lakukanProses(txtEditJudulCerita.text, ceritaDipilih,
-          txtEditRingkasan.text, txtEditIsiCerita.text, statusDipilih);
+    if (kategori_value != null && statusDipilih != null) {
+      lakukanProses(txtEditJudulCerita.text, kategori_value,
+          txtEditRingkasan.text, "null", statusDipilih);
     } else {
       AwesomeDialog(
-              context: context,
-              dialogType: DialogType.ERROR,
-              animType: AnimType.SCALE,
-              headerAnimationLoop: true,
-              title: 'Edit Cerita Gagal',
-              desc: 'Silahkan pilih kategori atau status cerita',
-              btnOkOnPress: () {},
-              btnOkIcon: Icons.cancel,
-              btnOkColor: Colors.red)
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Edit Cerita Gagal',
+          desc: 'Silahkan pilih kategori atau status cerita',
+          btnOkOnPress: () {},
+          btnOkIcon: Icons.cancel,
+          btnOkColor: Colors.red)
           .show();
     }
   }
@@ -313,6 +286,6 @@ class _EditCeritaState extends State<EditCerita> {
       "kode_user": u_email
     };
     bool res =
-        await CallApi().putDataEditCerita(data, 'ceritaedit/$c_id', context);
+    await CallApi().putDataEditCerita(data, 'ceritaedit/$c_id', context);
   }
 }
