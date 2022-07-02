@@ -37,6 +37,7 @@ class _UserState extends ResumableState<User> {
 
   double tinggiBox = 0;
   List widgetUsers = [];
+  List widgetKomisi = [];
   List widgetCeritaUsers = [];
   TextEditingController txtEditNamaLengkap = new TextEditingController();
   TextEditingController txtEditEmail = TextEditingController();
@@ -51,11 +52,13 @@ class _UserState extends ResumableState<User> {
     super.initState();
     loadDataUsers();
     loadDataCeritaUsers();
+    // loadDataKomisi();
   }
 
   @override
   void onResume() {
     loadDataCeritaUsers();
+    // loadDataKomisi();
   }
 
   @override
@@ -160,9 +163,10 @@ class _UserState extends ResumableState<User> {
                                   fontSize: 11,
                                   fontFamily: 'PoppinsMedium'),
                             ),
-                            const Text(
-                              'Rp 100.000,-',
-                              style: TextStyle(
+                            Text(
+                              // 'Rp. $ko_jumlahkomisi',
+                              "Rp. 0",
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,
                                   fontFamily: 'PoppinsMedium',
@@ -264,7 +268,29 @@ class _UserState extends ResumableState<User> {
                         ),
                         Container(
                             child: Row(children: <Widget>[
-                          IconButton(
+                              IconButton(
+                                onPressed: () {
+                                  c_id = widgetCeritaUsers[index]["id"];
+                                  c_judulcerita =
+                                  widgetCeritaUsers[index]["judul_cerita"];
+                                  c_kodekategori =
+                                  widgetCeritaUsers[index]["kode_kategori"];
+                                  c_txtceritasample =
+                                  widgetCeritaUsers[index]["txt_cerita_sample"];
+                                  c_txtceritafull =
+                                  widgetCeritaUsers[index]["txt_cerita_full"];
+                                  c_statuscerita =
+                                  widgetCeritaUsers[index]["status_cerita"];
+                                  // Ke layout tambah bab
+                                },
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                                tooltip: 'Tambah Bab',
+                              ),
+                              IconButton(
                             onPressed: () {
                               c_id = widgetCeritaUsers[index]["id"];
                               c_judulcerita =
@@ -290,7 +316,7 @@ class _UserState extends ResumableState<User> {
                             ),
                             tooltip: 'Edit Cerita',
                           ),
-                          IconButton(
+                              IconButton(
                               onPressed: () {
                                 AwesomeDialog(
                                   context: context,
@@ -322,7 +348,7 @@ class _UserState extends ResumableState<User> {
                                 size: 15,
                               ),
                               tooltip: 'Hapus Cerita'),
-                          IconButton(
+                              IconButton(
                             onPressed: () {
                               c_kodecerita =
                                   '${widgetCeritaUsers[index]["id"]}';
@@ -362,6 +388,18 @@ class _UserState extends ResumableState<User> {
         )
       ]),
     );
+  }
+
+  Future<void> loadDataKomisi() async {
+    var dataURL = Uri.parse(baseURL + 'komisi/$u_email');
+    http.Response response = await http.get(dataURL);
+
+    setState(() {
+      widgetKomisi = jsonDecode(response.body);
+      // print(widgetKomisi);
+      ko_jumlahkomisi = '${widgetKomisi[0]["jumlah_komisi"]}';
+      // print(ko_jumlahkomisi);
+    });
   }
 
   Future<void> loadDataCeritaUsers() async {

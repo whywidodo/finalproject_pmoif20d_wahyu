@@ -1,22 +1,14 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import './API/CallApi.dart';
 import 'User.dart';
 
-List<String> cerita = [
-  "Pilih Kategori Cerita",
-  "Novel",
-  "Dongeng",
-  "Cerpen",
-  "Biografi"
-];
-List<String> status = [
-  "Pilih Status Cerita",
-  "Gratis",
-  "Berbayar"
-];
+List<String> status = ["Gratis", "Berbayar"];
 
 class TambahCerita extends StatefulWidget {
   const TambahCerita({Key? key}) : super(key: key);
@@ -31,14 +23,19 @@ class _TambahCeritaState extends State<TambahCerita> {
   var txtCeritaIsi = TextEditingController();
   var txtCeritaSample = TextEditingController();
 
+  List widgetKategori = [];
+  String kategori_value = "";
+
   void initState() {
     super.initState();
     ceritaDipilih = 'Pilih Kategori Cerita';
-    statusDipilih = 'Pilih Status Cerita';
+    statusDipilih = "";
+    loadDataKategori();
   }
 
   @override
   Widget build(BuildContext context) {
+    // print(status);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -110,18 +107,19 @@ class _TambahCeritaState extends State<TambahCerita> {
                             ),
                             isDense: true,
                             itemHeight: null,
-                            hint: const Text("Kategori Cerita"),
+                            hint: const Text("Kategori Cerita", style: TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)),
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            value: ceritaDipilih,
-                            items: cerita.map((String value) {
+                            value: kategori_value.isNotEmpty ? kategori_value : null,
+                            items: widgetKategori.map((item) {
                               return DropdownMenuItem(
-                                  value: value, child: Text(value));
+                                value: item['nama_kategori'].toString(),
+                                child: Text(item['nama_kategori'].toString(), style: TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)),
+                              );
                             }).toList(),
-                            onChanged: (String? value) {
+                            onChanged: (Object? value) {
                               setState(() {
-                                ceritaDipilih = value!;
+                                kategori_value = value.toString();
                               });
-                              {}
                             })
                       ],
                     )),
@@ -202,7 +200,7 @@ class _TambahCeritaState extends State<TambahCerita> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Status Cerita',
+                          'Gratis atau Berbayar',
                           style: TextStyle(
                               color: Color(0xFF6A2B84),
                               fontFamily: 'PoppinsMedium',
@@ -216,16 +214,16 @@ class _TambahCeritaState extends State<TambahCerita> {
                                       color: Color(0xFF6A2B84), width: 1.2)),
                               border: OutlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: Color(0xFF6A2B84))),
+                                      BorderSide(color: Color(0xFF6A2B84))),
                             ),
                             isDense: true,
                             itemHeight: null,
-                            hint: const Text("Pilih Status Cerita"),
+                            hint: const Text("Gratis/Berbayar", style: TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)),
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            value: statusDipilih,
+                            value: statusDipilih.isNotEmpty ? statusDipilih : null,
                             items: status.map((String value) {
                               return DropdownMenuItem(
-                                  value: value, child: Text(value));
+                                  value: value, child: Text(value, style: const TextStyle(fontFamily: 'PoppinsMedium', fontSize: 12)));
                             }).toList(),
                             onChanged: (String? value) {
                               setState(() {
@@ -285,16 +283,26 @@ class _TambahCeritaState extends State<TambahCerita> {
             )));
   }
 
+  Future<void> loadDataKategori() async {
+    var dataURL = Uri.parse(baseURL + 'kategori');
+    http.Response response = await http.get(dataURL);
+
+    setState(() {
+      widgetKategori = jsonDecode(response.body);
+      // kategori_data = widgetKategori;
+    });
+  }
+
   void _validateProses() {
-    if (ceritaDipilih != 'Pilih Kategori Cerita' && statusDipilih != 'Pilih Status Cerita'){
+    if (kategori_value != null && ceritaDipilih !=null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        lakukanProses(
-            txtCeritaJudul.text, ceritaDipilih, txtCeritaSample.text, txtCeritaIsi.text, statusDipilih);
+        lakukanProses(txtCeritaJudul.text, kategori_value, txtCeritaSample.text,
+            txtCeritaIsi.text, statusDipilih);
       } else {
         // showAlertGagalTambah();
       }
-    }else{
+    } else {
       AwesomeDialog(
           context: context,
           dialogType: DialogType.ERROR,
@@ -304,12 +312,13 @@ class _TambahCeritaState extends State<TambahCerita> {
           desc: 'Silahkan pilih kategori atau status cerita',
           btnOkOnPress: () {},
           btnOkIcon: Icons.cancel,
-          btnOkColor: Colors.red
-      ).show();
+          btnOkColor: Colors.red)
+          .show();
     }
   }
 
-  lakukanProses(judulCerita, kategoriCerita, ringkasanCerita, isiCerita, statusCerita) async {
+  lakukanProses(judulCerita, kategoriCerita, ringkasanCerita, isiCerita,
+      statusCerita) async {
     var data = {
       "judul_cerita": judulCerita,
       "kode_kategori": kategoriCerita,
@@ -322,4 +331,6 @@ class _TambahCeritaState extends State<TambahCerita> {
     print(data);
     bool res = await CallApi().postDataTambahCerita(data, 'cerita', context);
   }
+
+
 }

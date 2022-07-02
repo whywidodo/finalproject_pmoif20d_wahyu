@@ -10,11 +10,21 @@ import '../User.dart';
 class CallApi{
   // Proses Registrasi User atau Pengguna
   Future postDataRegistrasi(data, apiUrl, BuildContext context) async{
+
+    var datakomisi = {
+      'kode_user': email_sementara,
+      'komisi_cerita': "0",
+      'jumlah_cerita': "0",
+      'jumlah_komisi': "0",
+      'status_komisi': "null",
+    };
+
     try{
       http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
-      print(hasilRespons.statusCode);
+      // print(hasilRespons.statusCode);
       print(hasilRespons.body);
       if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        http.Response hasilResponsKomisi = await http.post(Uri.parse(baseURL + 'komisi'), body:datakomisi);
         AwesomeDialog(
           context: context,
           dialogType: DialogType.SUCCES,
@@ -63,6 +73,23 @@ class CallApi{
       print(e.toString());
     }
   }
+
+  // Proses Tambah User ke Komisi
+  Future postDataKomisi(data, apiUrl, BuildContext context) async{
+    try{
+      http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } on Exception catch(e){
+      print(e.toString());
+    }
+  }
+
   Future postDataTambahCerita (data, apiUrl, BuildContext context) async{
     try{
       http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);

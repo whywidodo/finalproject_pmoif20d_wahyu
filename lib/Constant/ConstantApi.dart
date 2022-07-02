@@ -1,4 +1,4 @@
-String baseURL = "http://localhost/pmo/apiproject_pmoif20d_wahyu/public/";
+String baseURL = "http://192.168.43.93/pmo/apiproject_pmoif20d_wahyu/public/";
 
 // User
 String u_id = "";
@@ -9,7 +9,7 @@ String u_email = "";
 String u_password = "";
 
 // Cerita
-String statusDipilih = "Pilih Status Cerita";
+String statusDipilih = "";
 String ceritaDipilih = "Pilih Kategori Cerita";
 String c_id = "";
 String c_kodecerita = "";
@@ -45,4 +45,8 @@ String p_namabank = "";
 String p_namapemilik = "";
 String p_nomorrekening = "";
 String p_statuspenarikan = "";
+
+// Tambahan
+String email_sementara = "";
+String variabel_kategori = "";
 

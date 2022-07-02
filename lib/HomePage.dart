@@ -56,6 +56,7 @@ class _HomePageState extends ResumableState<HomePage>
     loadDataCerpen();
     loadDataNovel();
     loadDataBiografi();
+    checkUserLogin();
   }
 
   void onReady() {}
@@ -162,8 +163,20 @@ class _HomePageState extends ResumableState<HomePage>
                                 c_statuscerita = '${widgetsDongeng[i]["status_cerita"]}';
                                 c_ceritacreated = '${widgetsDongeng[i]["created_at"]["date"]}';
 
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                // _validateBaca();
+                                if(u_email != ""){
+                                  // if(c_statuscerita == "Gratis"){
+                                    Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                  // }else if(c_statuscerita == "Berbayar"){
+                                  //   Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaBerbayar()));
+                                  // }
+                                }else{
+                                  harusLogin();
+                                }
+
+
                               },
+
                             ),
                             const SizedBox(height: 10),
                             Text("${widgetsDongeng[i]["judul_cerita"]}",
@@ -333,6 +346,14 @@ class _HomePageState extends ResumableState<HomePage>
         ));
   }
 
+  // void _validateBaca(){
+  //   if(u_email != "") {
+  //     Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+  //   }else{
+  //     print("Login Dahulu");
+  //   }
+  // }
+
   void _validateInputs() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -404,7 +425,17 @@ class _HomePageState extends ResumableState<HomePage>
       'username': username,
       'password': password,
     };
+    email_sementara = email;
     bool res = await CallApi().postDataRegistrasi(data, 'users', context);
+  }
+
+  void checkUserLogin() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var islogin = pref.getBool("is_login");
+    if (islogin != null && islogin) {
+      u_email = pref.getString("email") as String;
+      u_password = pref.getString("password") as String;
+    }
   }
 
   void checkLogin() async {
@@ -427,18 +458,22 @@ class _HomePageState extends ResumableState<HomePage>
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => CeritaFavorite()));
     }else{
-      AwesomeDialog(
+      harusLogin();
+    }
+  }
+
+  void harusLogin(){
+    AwesomeDialog(
         context: context,
         dialogType: DialogType.WARNING,
         animType: AnimType.SCALE,
         headerAnimationLoop: true,
         title: 'Login Terlebih Dahulu',
-        desc: 'Silahkan melakukan login untuk masuk.',
+        desc: 'Silahkan melakukan login terlebih dahulu.',
         btnOkOnPress: () {},
         btnOkIcon: Icons.cancel,
         btnOkColor: Colors.orange
-      ).show();
-    }
+    ).show();
   }
 
   Future<void> loadDataDongeng() async {
