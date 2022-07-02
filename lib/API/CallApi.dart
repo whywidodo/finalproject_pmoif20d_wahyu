@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:finalproject_pmoif20d_wahyu/ListBabCerita.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../Constant/ConstantApi.dart';
@@ -90,6 +91,7 @@ class CallApi{
     }
   }
 
+  // Proses Tambah Cerita
   Future postDataTambahCerita (data, apiUrl, BuildContext context) async{
     try{
       http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
@@ -134,8 +136,83 @@ class CallApi{
     }
   }
 
+  // Proses Tambah Bab Cerita
+  Future postDataTambahBabCerita (data, apiUrl, BuildContext context) async{
+    try{
+      http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body:data);
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Tambah Bab Berhasil',
+          desc: 'Terimakasih telah berkontribusi',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => User()), (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+
+        return true;
+      } else {
+        AwesomeDialog(
+            context: context,
+            dialogType: DialogType.ERROR,
+            animType: AnimType.SCALE,
+            headerAnimationLoop: true,
+            title: 'Tambah Bab Gagal',
+            desc: 'Silahkan periksa kelengkapan isian',
+            btnOkOnPress: () {},
+            btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.red
+        ).show();
+        return false;
+      }
+    } on Exception catch(e){
+      print(e.toString());
+    }
+  }
+
   // Proses Untuk Menghapus Data Cerita
   Future delDataCerita(data, apiUrl, BuildContext context) async{
+    print(apiUrl);
+    var dataBab = {
+      'id': c_id
+    };
+    try{
+      http.Response hasilRespons = await http.get(Uri.parse(baseURL + apiUrl));
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 201 || hasilRespons.statusCode == 200) {
+        http.Response hasilResponsBab = await http.get(Uri.parse(baseURL + 'babceritahapus/$c_id'));
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Cerita berhasil dihapus.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => User()), (route) => false);
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      } else {
+        return false;
+      }
+    } on Exception catch(e){
+      print(e.toString());
+    }
+  }
+
+  // Proses Untuk Menghapus Data Bab Cerita
+  Future delDataBabCerita(data, apiUrl, BuildContext context) async{
     print(apiUrl);
     try{
       http.Response hasilRespons = await http.get(Uri.parse(baseURL + apiUrl));
@@ -148,10 +225,10 @@ class CallApi{
           animType: AnimType.SCALE,
           headerAnimationLoop: true,
           title: 'Berhasil',
-          desc: 'Cerita berhasil dihapus.',
+          desc: 'Bab berhasil dihapus.',
           btnOkOnPress: () {
             Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => User()), (route) => false);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ListBabCerita()), (route) => false);
           },
           btnOkIcon: Icons.cancel,
         ).show();
@@ -212,6 +289,35 @@ class CallApi{
           btnOkOnPress: () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) => User()));
+          },
+          btnOkIcon: Icons.cancel,
+        ).show();
+        return true;
+      }else{
+        return false;
+      }
+    } on Exception catch (e){
+      print(e.toString());
+    }
+  }
+
+  // Proses Merubah Data Bab
+  Future putDataEditBab(data, apiUrl, BuildContext context) async{
+    try {
+      http.Response hasilRespons = await http.post(Uri.parse(baseURL + apiUrl), body: data);
+      print(hasilRespons.statusCode);
+      print(hasilRespons.body);
+      if (hasilRespons.statusCode == 200 || hasilRespons.statusCode == 201) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.SCALE,
+          headerAnimationLoop: true,
+          title: 'Berhasil',
+          desc: 'Bab berhasil diubah.',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ListBabCerita()));
           },
           btnOkIcon: Icons.cancel,
         ).show();

@@ -89,15 +89,12 @@ flutter:
      - family: PoppinsBlack
        fonts:
          - asset: assets/Fonts/Poppins-Black.ttf
-         - asset: assets/Fonts/Poppins-BlackItalic.ttf
      - family: PoppinsMedium
        fonts:
          - asset: assets/Fonts/Poppins-Medium.ttf
-         - asset: assets/Fonts/Poppins-MediumItalic.ttf
      - family: PoppinsLight
        fonts:
          - asset: assets/Fonts/Poppins-Light.ttf
-         - asset: assets/Fonts/Poppins-LightItalic.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

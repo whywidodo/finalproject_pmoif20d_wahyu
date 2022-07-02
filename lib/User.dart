@@ -5,6 +5,7 @@ import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:finalproject_pmoif20d_wahyu/ListBabCerita.dart';
 import 'package:finalproject_pmoif20d_wahyu/TambahBabCerita.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _UserState extends ResumableState<User> {
   double tinggiBox = 0;
   List widgetUsers = [];
   List widgetKomisi = [];
+  List widgetBabCerita = [];
   List widgetCeritaUsers = [];
   TextEditingController txtEditNamaLengkap = new TextEditingController();
   TextEditingController txtEditEmail = TextEditingController();
@@ -53,6 +55,7 @@ class _UserState extends ResumableState<User> {
     super.initState();
     loadDataUsers();
     loadDataCeritaUsers();
+    loadDataBab();
     // loadDataKomisi();
   }
 
@@ -299,21 +302,18 @@ class _UserState extends ResumableState<User> {
                               IconButton(
                             onPressed: () {
                               c_id = widgetCeritaUsers[index]["id"];
-                              c_judulcerita =
-                                  widgetCeritaUsers[index]["judul_cerita"];
-                              c_kodekategori =
-                                  widgetCeritaUsers[index]["kode_kategori"];
-                              c_txtceritasample =
-                                  widgetCeritaUsers[index]["txt_cerita_sample"];
-                              c_txtceritafull =
-                                  widgetCeritaUsers[index]["txt_cerita_full"];
-                              c_statuscerita =
-                                  widgetCeritaUsers[index]["status_cerita"];
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const EditCerita()),
-                                  (route) => false);
+                              c_judulcerita = widgetCeritaUsers[index]["judul_cerita"];
+                              c_kodekategori = widgetCeritaUsers[index]["kode_kategori"];
+                              c_txtceritasample = widgetCeritaUsers[index]["txt_cerita_sample"];
+                              c_txtceritafull = widgetCeritaUsers[index]["txt_cerita_full"];
+                              c_statuscerita = widgetCeritaUsers[index]["status_cerita"];
+
+                              // Navigator.pushAndRemoveUntil(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => const EditCerita()),
+                              //     (route) => false);
+                              showPilihanEdit();
                             },
                             icon: const Icon(
                               Icons.edit,
@@ -339,6 +339,7 @@ class _UserState extends ResumableState<User> {
                                   btnOkColor: const Color(0xFF6A2B84),
                                   btnCancelOnPress: () {},
                                   btnOkOnPress: () {
+                                    c_id = '${widgetCeritaUsers[index]["id"]}';
                                     c_kodecerita =
                                         '${widgetCeritaUsers[index]["id"]}';
                                     c_judulcerita =
@@ -356,6 +357,7 @@ class _UserState extends ResumableState<User> {
                               tooltip: 'Hapus Cerita'),
                               IconButton(
                             onPressed: () {
+                              c_id = widgetCeritaUsers[index]["id"];
                               c_kodecerita =
                                   '${widgetCeritaUsers[index]["id"]}';
                               c_judulcerita =
@@ -510,7 +512,7 @@ class _UserState extends ResumableState<User> {
       title: 'Logout Berhasil',
       desc: 'Terimakasih telah menggunakan aplikasi kami.',
       btnOkOnPress: () {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         backToHome();
       },
       btnOkIcon: Icons.cancel,
@@ -532,7 +534,48 @@ class _UserState extends ResumableState<User> {
     }
   }
 
-  void showExitConfirm() {}
+  Future<void> loadDataBab() async {
+    var dataURL = Uri.parse(baseURL + 'babcerita');
+    http.Response response = await http.get(dataURL);
+
+    setState(() {
+      widgetBabCerita = jsonDecode(response.body);
+    });
+  }
+
+  void showPilihanEdit() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.QUESTION,
+      headerAnimationLoop: false,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Perubahan Data',
+      desc: 'Silahkan pilih bagian yang akan dirubah.',
+      buttonsTextStyle: const TextStyle(color: Colors.white, fontFamily: 'PoppinsMedium', fontSize: 12),
+      btnOkColor: Colors.orange ,
+      btnCancelColor: Colors.orange,
+      btnOkOnPress: () {
+        // Mengarahkan ke Layout Bab
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ListBabCerita()),
+                (route) => false);
+      },
+      btnOkText: "BAB",
+      btnCancelOnPress: () {
+        // Mengarahkan ke Layout Cerita
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const EditCerita()),
+            (route) => false);
+      },
+      btnCancelText:  "Cerita"
+    ).show();
+
+  }
+
 
   void showDialogUbah() {
     // print(txtPasswordLogin);

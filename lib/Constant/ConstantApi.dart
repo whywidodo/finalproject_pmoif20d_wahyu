@@ -10,7 +10,7 @@ String u_password = "";
 
 // Cerita
 String statusDipilih = "";
-String ceritaDipilih = "Pilih Kategori Cerita";
+String ceritaDipilih = "";
 String c_id = "";
 String c_kodecerita = "";
 String c_judulcerita = "";
@@ -49,4 +49,11 @@ String p_statuspenarikan = "";
 // Tambahan
 String email_sementara = "";
 String variabel_kategori = "";
+
+// Bab
+String bab_id = "";
+String bab_idcerita = "";
+String bab_judul = "";
+String bab_isi = "";
+String bab_user = "";
 

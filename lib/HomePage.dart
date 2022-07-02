@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:finalproject_pmoif20d_wahyu/About.dart';
+import 'package:finalproject_pmoif20d_wahyu/BacaCerita.dart';
 import 'package:finalproject_pmoif20d_wahyu/CeritaFavorite.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/User.dart';
@@ -154,6 +155,7 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
+                                c_id = '${widgetsDongeng[i]["id"]}';
                                 c_kodecerita = '${widgetsDongeng[i]["kode_cerita"]}';
                                 c_judulcerita = '${widgetsDongeng[i]["judul_cerita"]}';
                                 c_kodekategori = '${widgetsDongeng[i]["kode_kategori"]}';
@@ -165,15 +167,10 @@ class _HomePageState extends ResumableState<HomePage>
 
                                 // _validateBaca();
                                 if(u_email != ""){
-                                  // if(c_statuscerita == "Gratis"){
                                     Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
-                                  // }else if(c_statuscerita == "Berbayar"){
-                                  //   Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaBerbayar()));
-                                  // }
                                 }else{
                                   harusLogin();
                                 }
-
 
                               },
 
@@ -212,6 +209,7 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
+                                c_id = '${widgetsCerpen[i]["id"]}';
                                 c_kodecerita = '${widgetsCerpen[i]["kode_cerita"]}';
                                 c_judulcerita = '${widgetsCerpen[i]["judul_cerita"]}';
                                 c_kodekategori = '${widgetsCerpen[i]["kode_kategori"]}';
@@ -221,7 +219,11 @@ class _HomePageState extends ResumableState<HomePage>
                                 c_statuscerita = '${widgetsCerpen[i]["status_cerita"]}';
                                 c_ceritacreated = '${widgetsCerpen[i]["created_at"]["date"]}';
 
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                if(u_email != ""){
+                                  Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                }else{
+                                  harusLogin();
+                                }
                               },
                             ),
                             const SizedBox(height: 10),
@@ -258,6 +260,7 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
+                                c_id = '${widgetsNovel[i]["id"]}';
                                 c_kodecerita = '${widgetsNovel[i]["kode_cerita"]}';
                                 c_judulcerita = '${widgetsNovel[i]["judul_cerita"]}';
                                 c_kodekategori = '${widgetsNovel[i]["kode_kategori"]}';
@@ -267,7 +270,11 @@ class _HomePageState extends ResumableState<HomePage>
                                 c_statuscerita = '${widgetsNovel[i]["status_cerita"]}';
                                 c_ceritacreated = '${widgetsNovel[i]["created_at"]["date"]}';
 
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                if(u_email != ""){
+                                  Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                }else{
+                                  harusLogin();
+                                }
                               },
                             ),
                             const SizedBox(height: 10),
@@ -304,6 +311,7 @@ class _HomePageState extends ResumableState<HomePage>
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               onTap: () {
+                                c_id = '${widgetsBiografi[i]["id"]}';
                                 c_kodecerita = '${widgetsBiografi[i]["kode_cerita"]}';
                                 c_judulcerita = '${widgetsBiografi[i]["judul_cerita"]}';
                                 c_kodekategori = '${widgetsBiografi[i]["kode_kategori"]}';
@@ -313,7 +321,11 @@ class _HomePageState extends ResumableState<HomePage>
                                 c_statuscerita = '${widgetsBiografi[i]["status_cerita"]}';
                                 c_ceritacreated = '${widgetsBiografi[i]["created_at"]["date"]}';
 
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                if(u_email != ""){
+                                  Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
+                                }else{
+                                  harusLogin();
+                                }
                               },
                             ),
                             const SizedBox(height: 10),
@@ -345,14 +357,6 @@ class _HomePageState extends ResumableState<HomePage>
           ),
         ));
   }
-
-  // void _validateBaca(){
-  //   if(u_email != "") {
-  //     Navigator.push(context,MaterialPageRoute(builder: (context) => DetailCeritaGratis()));
-  //   }else{
-  //     print("Login Dahulu");
-  //   }
-  // }
 
   void _validateInputs() {
     if (_formKey.currentState!.validate()) {
