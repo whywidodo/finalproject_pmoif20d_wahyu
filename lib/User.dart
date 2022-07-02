@@ -5,6 +5,7 @@ import 'package:finalproject_pmoif20d_wahyu/Constant/ConstantApi.dart';
 import 'package:finalproject_pmoif20d_wahyu/DetailCeritaGratis.dart';
 import 'package:finalproject_pmoif20d_wahyu/HomePage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:finalproject_pmoif20d_wahyu/TambahBabCerita.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:need_resume/need_resume.dart';
@@ -163,10 +164,10 @@ class _UserState extends ResumableState<User> {
                                   fontSize: 11,
                                   fontFamily: 'PoppinsMedium'),
                             ),
-                            Text(
+                            const Text(
                               // 'Rp. $ko_jumlahkomisi',
                               "Rp. 0",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,
                                   fontFamily: 'PoppinsMedium',
@@ -282,6 +283,11 @@ class _UserState extends ResumableState<User> {
                                   c_statuscerita =
                                   widgetCeritaUsers[index]["status_cerita"];
                                   // Ke layout tambah bab
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const TambahBabCerita()),
+                                          (route) => false);
                                 },
                                 icon: const Icon(
                                   Icons.add,
