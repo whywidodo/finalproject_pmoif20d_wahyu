@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:finalproject_pmoif20d_wahyu/API/CallApi.dart';
 import 'package:flutter/material.dart';
 
+import 'Constant/ConstantApi.dart';
 import 'User.dart';
 
 class TambahBabCerita extends StatefulWidget {
@@ -17,6 +18,14 @@ class _TambahBabCeritaState extends State<TambahBabCerita> {
   var txtIsiBab = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    print(c_id);
+    print(u_email);
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
     appBar: AppBar(
@@ -30,7 +39,7 @@ class _TambahBabCeritaState extends State<TambahBabCerita> {
       ),
       centerTitle: true,
       title: const Text(
-        'Tambah Isi Cerita',
+        'Tambah Bab Cerita',
         style: TextStyle(fontFamily: 'PoppinsMedium'),
       ),
       backgroundColor: const Color(0xFF6A2B84),
@@ -58,7 +67,7 @@ class _TambahBabCeritaState extends State<TambahBabCerita> {
                               controller: txtJudulBab,
                               decoration: const InputDecoration(
                                   isDense: true,
-                                  hintText: 'BAB 1',
+                                  hintText: 'Tuliskan Judul Bab Cerita',
                                   contentPadding: EdgeInsets.all(14),
                                   fillColor: Colors.white,
                                   focusedBorder: OutlineInputBorder(
@@ -93,7 +102,7 @@ class _TambahBabCeritaState extends State<TambahBabCerita> {
                               maxLines: 15,
                               decoration: const InputDecoration(
                                   isDense: true,
-                                  hintText: 'Tuliskan isi BAB cerita',
+                                  hintText: 'Tuliskan Isi Bab Cerita',
                                   contentPadding: EdgeInsets.all(14),
                                   fillColor: Colors.white,
                                   focusedBorder: OutlineInputBorder(
@@ -119,7 +128,7 @@ class _TambahBabCeritaState extends State<TambahBabCerita> {
                               ),
                             ),
                             onPressed: () {
-                              // _validateProses();
+                              _validateProses();
                               // Navigator.pop(context);
                             },
                             child: const Text("Tambah",
@@ -133,41 +142,32 @@ class _TambahBabCeritaState extends State<TambahBabCerita> {
               ]),
             )));
   }
-//     void _validateProses() {
-//       if (ceritaDipilih != 'Pilih Kategori Cerita' && statusDipilih != 'Pilih Status Cerita'){
-//         if (_formKey.currentState!.validate()) {
-//           _formKey.currentState!.save();
-//           lakukanProses(
-//               txtCeritaJudul.text, ceritaDipilih, txtCeritaSample.text, txtCeritaIsi.text, statusDipilih);
-//         } else {
-//           // showAlertGagalTambah();
-//         }
-//       }else{
-//         AwesomeDialog(
-//             context: context,
-//             dialogType: DialogType.ERROR,
-//             animType: AnimType.SCALE,
-//             headerAnimationLoop: true,
-//             title: 'Tambah Cerita Gagal',
-//             desc: 'Silahkan pilih kategori atau status cerita',
-//             btnOkOnPress: () {},
-//             btnOkIcon: Icons.cancel,
-//             btnOkColor: Colors.red
-//         ).show();
-//       }
-//     }
-//
-//     lakukanProses(judulCerita, kategoriCerita, ringkasanCerita, isiCerita, statusCerita) async {
-//       var data = {
-//         "judul_cerita": judulCerita,
-//         "kode_kategori": kategoriCerita,
-//         "txt_cerita_sample": ringkasanCerita,
-//         "txt_cerita_full": isiCerita,
-//         "sampul_cerita": "null",
-//         "status_cerita": statusCerita,
-//         "kode_user": u_email
-//       };
-//       print(data);
-//       bool res = await CallApi().postDataTambahCerita(data, 'cerita', context);
-//     }
+    void _validateProses() {
+      if (txtJudulBab.text != null && txtIsiBab.text != null){
+          lakukanProses(c_id, txtJudulBab.text, txtIsiBab.text, u_email);
+      }else{
+        AwesomeDialog(
+            context: context,
+            dialogType: DialogType.ERROR,
+            animType: AnimType.SCALE,
+            headerAnimationLoop: true,
+            title: 'Tambah Bab Cerita Gagal',
+            desc: 'Silahkan pilih kategori atau status cerita',
+            btnOkOnPress: () {},
+            btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.red
+        ).show();
+      }
+    }
+
+    lakukanProses(idcerita, judulbab, isibab, email) async {
+      var data = {
+        "id_cerita": idcerita,
+        "judul_bab": judulbab,
+        "isi_bab": isibab,
+        "kode_user": email,
+      };
+      print(data);
+      bool res = await CallApi().postDataTambahBabCerita(data, 'babcerita', context);
+    }
 }
